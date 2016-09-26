@@ -1,0 +1,6 @@
+*.class
+*.log
+*.prefs
+target/*
+codecoverage/*
+/target/
