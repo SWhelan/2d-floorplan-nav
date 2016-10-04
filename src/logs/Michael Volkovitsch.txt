@@ -1,0 +1,15 @@
+Week 1: 9/24-9/30
+
+Familiarized myself with MATLAB image handling, writing some misc code to load and edit the image
+	files we plan to use.
+Wrote and uploaded a basic script to show the "dot grid" applied to the image files.
+	The dots are spaced at an even width on the picture, and if there is no color between two dots
+		they are connected with a line
+	The resulting grid is then displayed on the image file
+Problems encountered
+	Because the grid is 1 pixel thick, sometimes it won't initially display if the image needs
+		to be scaled to fit on the screen (it shows up if you zoom in), which at first looked like a bug
+	One point of the graph didn't connect properly using a wide width and only cardinal connections
+		Potential fixes are:
+			A denser grid
+			Introduce diagonal edges
