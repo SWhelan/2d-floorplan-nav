@@ -4,4 +4,4 @@ Looked into and wrote some test code that calls out to a matlab script.
 Set up Java Spark server.
 Added Mustache Template Engine and a CSS framework, Skeleton.
 Added the "/" route to render a template with just a title.
-Made sure everything was working is templates worked and css loaded properly.
+Made sure everything was working ie templates worked and css loaded properly.

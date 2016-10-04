@@ -1,5 +1,12 @@
-  {{> header}}
-  <div class="one-half column">
+{{> header}}
+  <div class="column">
     <h4>2D Floorplan Navigation</h4>
+    <form action="/uploadImage" class="dropzone" id="image-upload-dropzone">
+        <div class="fallback">
+            <input name="file " type="file" multiple />
+        </div>
+    </form>
+    <div id="file-list">
+    </div>
   </div>
-  {{> footer}}
+{{> footer}}

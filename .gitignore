@@ -4,3 +4,4 @@
 target/*
 codecoverage/*
 /target/
+tmp/*
