@@ -1,12 +1,27 @@
 {{> header}}
-  <div class="column">
-    <h4>2D Floorplan Navigation</h4>
-    <form action="/uploadImage" class="dropzone" id="image-upload-dropzone">
-        <div class="fallback">
-            <input name="file " type="file" multiple />
-        </div>
-    </form>
-    <div id="file-list">
+<div class="row">
+    <div class="column">
+        <h1>2D Floorplan Navigation</h1>
+        <form action="/uploadImage" class="dropzone" id="image-upload-dropzone">
+            <div class="fallback">
+                <input name="file " type="file" multiple />
+            </div>
+        </form>
     </div>
-  </div>
+</div>
+<div class="row">
+    <div class="column" id="order-files-info">
+        <h3>Drag and drop the files in floor order (highest floor first)</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="one-half column" id="file-list"></div>
+</div>
+<br/>
+<div class="row">
+    <form action="/processImageOrder" method="POST">
+        <div id="image-order-data"></div>
+        <input class="button-primary" type="submit" value="Submit">
+    </form>
+</div>
 {{> footer}}
