@@ -37,3 +37,69 @@ for r=1:rowLength
    end
 end
 imshow(display)
+end
+
+function r = Heuristic(start, goal)
+r = abs(start(1)-goal(1)) + abs(start(2)-goal(2));
+end
+
+%Takes adjacency matrix and two ordered pairs start, end
+function AStarSearch(AdjacencyMatrix, start, goal)
+%[cost, heuristic value, function value, parent x, parent y]
+SearchMatrix = cell(size(AdjacencyMatrix, 1), size(AdjacencyMatrix,2));
+%initialize starting location
+SearchMatrix{start(1), start(2), 1} = 0;
+SearchMatrix{start(1), start(2), 2} = Heuristic(start, goal);
+SearchMatrix{start(1), start(2), 3} = Heuristic(start, goal);
+%TODO: learn how to add a comparator to the priority queue
+OpenList = java.util.PriorityQueue();
+ClosedList = java.util.LinkedList();
+OpenList.add(SearchMatrix{start(1), start(2)});
+Path = [];
+while OpenList.size()>0
+    if ExploreLocation(SearchMatrix, AdjacencyMatrix, goal, OpenList, ClosedList)
+       %create the path
+       break;
+    end
+end
+if size(Path,1)>0
+   %do good things
+else
+   %do bad things 
+end
+end
+
+function goalReached = ExploreLocation(SearchMatrix, AdjacencyMatrix, goal, OpenList, ClosedList)
+goalReached = false;
+location = OpenList.poll();
+for i=1:AdjacencyMatrix{location(0), location(1),:}
+   if CheckLocation(location, SearchMatrix, AdjacencyMatrix, goal, OpenList, ClosedList)
+       goalReached=true;
+   end
+end
+end
+
+function goalReached = CheckLocation(location, SearchMatrix, AdjacencyMatrix, goal, OpenList, ClosedList)
+goalReached = location(1) == goal(1) && location(2) == goal(2);
+valid = true;
+%check closed list
+for i=1:ClosedList.size()
+   check = ClosedList.get(i);
+   if location(1)==check(1) && location(2)==check(2)
+      valid = false; 
+   end
+end
+%check open list
+if valid
+   check = OpenList.get(i);
+   for i=1:OpenList.size()
+      if location(1)==check(1) && location(2)==check(2)
+          valid = false;
+      end
+   end
+end
+%add to open list
+if valid
+       
+end
+end
