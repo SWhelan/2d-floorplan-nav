@@ -1,7 +1,17 @@
-Week 1 9/24-9/30
+Week 1 9/24 - 9/30
 
 Looked into and wrote some test code that calls out to a matlab script.
 Set up Java Spark server.
 Added Mustache Template Engine and a CSS framework, Skeleton.
 Added the "/" route to render a template with just a title.
 Made sure everything was working ie templates worked and css loaded properly.
+
+Week 2 10/1 - 10/7
+
+Created a form that allowed images to be uploaded to the server.
+The server takes the image and places it on disk.
+Once the file has uploaded the file name is added to a list on the screen.
+The list is draggable/orderable. This will handle the mapping of images to floors.
+
+A screenshot of the current state of the UI after uploading two images and
+while dragging a name is in /logs/screenshots/Sarah-Week2.png.

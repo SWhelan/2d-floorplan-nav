@@ -8,6 +8,17 @@ Dropzone.options.imageUploadDropzone = {
     maxFilesize: 10 // MB
 };
 
+document.addEventListener("DOMContentLoaded", function() {
+   dragula([element("file-list")])
+    .on('drop', function (el) {
+       console.log("dropped");
+    });
+});
+
 function appendToFileList(name) {
-    document.getElementById("file-list").innerHTML += "<p>" + name + "</p>";
+    element("file-list").innerHTML += "<div class='draggable-file'>" + name + "</div>";
+}
+
+function element(id) {
+    return document.getElementById(id);
 }
