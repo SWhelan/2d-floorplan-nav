@@ -1,0 +1,12 @@
+{{> header}}
+<h1>Click two points on the map for directions between them.</h1>
+<div class="row">
+    <div class="column">
+        {{#filenames}}
+        <img class="floor" src="{{route}}{{.}}">
+        {{/filenames}}
+    </div>
+</div>
+<div id="point-holder"></div>
+<script type="text/javascript" src="js/route.js"></script>
+{{> footer}}

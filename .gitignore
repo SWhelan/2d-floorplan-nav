@@ -4,4 +4,4 @@
 target/*
 codecoverage/*
 /target/
-tmp/*
+src/main/resources/static/tmp/*

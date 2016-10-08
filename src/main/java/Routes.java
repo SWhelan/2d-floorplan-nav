@@ -10,6 +10,8 @@ public class Routes {
 	public static void registerAll() {
 		get("/", (rq, rs) -> ApplicationController.renderHome(rq, rs), ENGINE);
 		post("/uploadImage", (rq, rs) -> ApplicationController.uploadImage(rq, rs), ENGINE);
+		post("/processImageOrder", (rq, rs) -> ApplicationController.uploadImageOrdering(rq, rs), ENGINE);
+		post("/uploadPoints", (rq, rs) -> ApplicationController.getRoute(rq, rs), ENGINE);
 	}
 
 }
