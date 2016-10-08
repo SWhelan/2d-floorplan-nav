@@ -1,15 +1,34 @@
 Week 1: 9/24-9/30
 
-Familiarized myself with MATLAB image handling, writing some misc code to load and edit the image
-	files we plan to use.
-Wrote and uploaded a basic script to show the "dot grid" applied to the image files.
-	The dots are spaced at an even width on the picture, and if there is no color between two dots
-		they are connected with a line
-	The resulting grid is then displayed on the image file
-Problems encountered
-	Because the grid is 1 pixel thick, sometimes it won't initially display if the image needs
-		to be scaled to fit on the screen (it shows up if you zoom in), which at first looked like a bug
-	One point of the graph didn't connect properly using a wide width and only cardinal connections
-		Potential fixes are:
-			A denser grid
-			Introduce diagonal edges
+	Worked with Jonathan
+	Familiarized myself with MATLAB image handling, writing some misc code to load and edit the image
+		files we plan to use.
+	Wrote and uploaded a basic script to show the "dot grid" applied to the image files.
+		The dots are spaced at an even width on the picture, and if there is no color between two dots
+			they are connected with a line
+		The resulting grid is then displayed on the image file
+	Problems encountered
+		Because the grid is 1 pixel thick, sometimes it won't initially display if the image needs
+			to be scaled to fit on the screen (it shows up if you zoom in), which at first looked like a bug
+		One point of the graph didn't connect properly using a wide width and only cardinal connections
+			Potential fixes are:
+				A denser grid
+				Introduce diagonal edges
+			
+Week 2: 10/1-10/7
+
+	Worked with Jonathan
+	Edited last week's code to construct an adjacency matrix while searching for connections
+	Started pathfinding code
+		Also located in DotGrid
+		Implementation of A* using the adjacency matrix
+		Currently only pseudo code
+			Needs to use Java priority queue, which needs a comparator function
+				comparartor function needs to be written/compiled in Java and imported
+			May be better to export the adjacency matrix to java code, than to import java structures
+	Looking at calling java code from matlab
+		rather than import java structures to implement A* in matlab, pass adjacency matrix to java implementation of A*
+		need to figure out how data is passed to java code and how useful it will be
+		according to documentation, the cell array used for the adjacency matrix will be passed as Object[]
+			not sure if the 4D structure will be preserved
+	Next week I'll determine what parts should be java and which should be matlab and finish the A* code in the appropriate laguage
