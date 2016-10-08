@@ -15,3 +15,20 @@ The list is draggable/orderable. This will handle the mapping of images to floor
 
 A screenshot of the current state of the UI after uploading two images and
 while dragging a name is in /logs/screenshots/Sarah-Week2.png.
+
+Week 3 10/8 - 10/14
+
+Each time the filenames in the list were dragged the inputs to the form are 
+updated to match. When the form is submitted the server gets a list of filenames
+in order of floors. Once the server has this list it redirects to a page
+that displays all of the images in a column. 
+
+This page asks for two points - the starting and ending points for the path.
+Added javascript to translate the two points locations on the image displayed
+to points on the full sized image. Once the second point is clicked the data
+is sent to the server again. Next week the server will send the two data points
+and the order of the floors to the path finding algorithm.
+
+A screenshot of this new screen is in /logs/screenshots/Sarah-Week3.png.
+Both images/floors are displayed on that page but the screenshot only shows the
+top image/floor.
