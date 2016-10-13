@@ -14,3 +14,18 @@ body {
     padding: 10px;
     cursor: move;
 }
+
+.floor {
+    width: 100%;
+    cursor: pointer;
+}
+
+.point {
+    width: 26px;
+    height: 26px;
+    background: #33C3F0; // From skeleton.css to match theme.
+    -moz-border-radius: 13px;
+    -webkit-border-radius: 13px;
+    border-radius: 13px;
+    position: absolute;
+}

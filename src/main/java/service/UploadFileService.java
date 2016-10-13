@@ -13,8 +13,10 @@ import javax.servlet.http.Part;
 import spark.Request;
 
 public class UploadFileService {
+	public static final String DEFAULT_IMAGE_LOCATION = "tmp/";
+	
 	private static final String MULTIPART_CONFIG_KEY = "org.eclipse.jetty.multipartConfig";
-	private static final String DEFAULT_MULTIPART_WRITE_LOCATION = "tmp/";
+	public static final String DEFAULT_MULTIPART_WRITE_LOCATION = "src/main/resources/static/" + DEFAULT_IMAGE_LOCATION;
 	private static final String DEFAULT_MULTIPART_READ_LOCATION = "/tmp";
 	private static final String FILE_KEY = "file";
 	

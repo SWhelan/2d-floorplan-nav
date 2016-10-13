@@ -1,3 +1,10 @@
 For the week of 9/30
 Worked with Michael on adding the dots grid and lines that do not connect to the edges of the original image.
 Learned the basics for Matlab, such as formating for loops and if statements.
+
+For the week of 10/7
+Worked with Michael on the psuedo code for A* while learning how A* functions
+Learned more about Matlab and its ways to use and manipulate Java functionality
+Discussed with Michael some further steps as after this point we will be working on separate parts of the project, 
+	such as plans for how I will connect elevators and stairs to nodes and how will movement through those work
+	as well as what ways can we get A* to work (using a .jar file or running A* through Java instead).
