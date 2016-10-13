@@ -32,3 +32,21 @@ Week 2: 10/1-10/7
 		according to documentation, the cell array used for the adjacency matrix will be passed as Object[]
 			not sure if the 4D structure will be preserved
 	Next week I'll determine what parts should be java and which should be matlab and finish the A* code in the appropriate laguage
+	
+Week 3: 10/8-10/14
+
+	Decided that it made the most sense to do image processing in matlab and all pathfinding in java
+	Matlab uses java 1.7 (supposedly being updated to 1.8 eventually), so I had to figure out how to compile java 7 code from a java 8 ide
+	Implemented A* search in java using custom classes to represent the map locations and adjacencies
+	Edited matlab code to use these new classes and methods
+	Added primitive A* function in matlab which takes two user-selected points and displays a found path between them
+		standard test is the matlab command "DotGrid('NoDoors.png', 36);"
+	Bugs:
+		the disaplyed path was going through walls, but I think I've fixed it although more testing should be done
+			it was going from 0 indexed java locations to 1 indexed matlab locations that messed up where to draw the path
+		the path doesn't appear to be entirely optimal
+			one test run resulted in a path that made a "bump" in the path as poorly drawn below
+			    _________
+			___| 	     |_____
+	To-do:
+		Edit matlab file/function names	

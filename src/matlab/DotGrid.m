@@ -1,37 +1,63 @@
+
+function adjacencyMatrix = DotGrid (file, width)
+    image = imread(file);    
+    imshow(image)
+    [x,y] = ginput(2);
+    x = round(x/width)
+    y = round(y/width)
+    adjacencyMatrix = FindConnections(file, width);
+    aStarAgent = javaObjectEDT('Pathfinding.AStar');
+    path = javaMethod('AStarSearch', aStarAgent, [x(1) y(1)], [x(2) y(2)], adjacencyMatrix)
+    DisplayPath(image, width, path);
+end
+
+function DisplayPath(image, width, path)
+    for i=1:size(path,1)-1
+        p1 = path(i,:);
+        p2 = path(i+1,:);
+        x1 = min([p1(1) p2(1)]);
+        x2 = max([p1(1) p2(1)]);
+        y1 = min([p1(2) p2(2)]);
+        y2 = max([p1(2) p2(2)]);
+        image(y1*width:y2*width, x1*width:x2*width, 1) = 77;
+        image(y1*width:y2*width, x1*width:x2*width, 2) = 56;
+        image(y1*width:y2*width, x1*width:x2*width, 3) = 153;
+    end
+    %figure
+    imshow(image)
+end
+
 %read the image pointed to by file witha dot spacing of width
-function DotGrid (file, width)
+function adjacencyMatrix = FindConnections (file, width)
 image = imread(file);
 display = image;
-rowBound = size(display, 1);
-rowLength = floor(rowBound/width);
-colBound = size(display, 2);
-colLength = floor(colBound/width);
-%adjacency list is rxcx2
-AdjacencyMatrix = cell(rowLength, colLength);
-for r=1:rowLength
-   for c=1:colLength
-      rPixel = r*width;
-      cPixel = c*width;
-      if display(rPixel,cPixel,:) == 255
-          %color the dot
-          display(rPixel,cPixel,:) = 0;
+yBound = size(display, 1);%rows
+yLength = floor(yBound/width);
+xBound = size(display, 2);%columns
+xLength = floor(xBound/width);
+adjacencyMatrix = javaObjectEDT('Pathfinding.AdjacencyMatrix', xBound, yBound);
+for y=1:yLength
+   for x=1:xLength
+      xPixel = x*width;
+      yPixel = y*width;
+      if display(yPixel,xPixel,:) == 255
+          %color the dot black
+          display(yPixel,xPixel,:) = 0;
           %if the next horizontal point is in bounds and the image is clear between
           %them, add the adjacency to both points
-          if (c+1 <= colLength) & (display(rPixel, cPixel+1:cPixel+width-1,:) == 255)
-             AdjacencyMatrix{r, c} = [AdjacencyMatrix{r,c} [r c+1]];
-             AdjacencyMatrix{r,c+1} = [AdjacencyMatrix{r,c+1} [r c]];
-             display(rPixel, cPixel+1:cPixel+width-1,1) = 131;
-             display(rPixel, cPixel+1:cPixel+width-1,2) = 255;
-             display(rPixel, cPixel+1:cPixel+width-1,3) = 119;
+          if (x+1 <= xLength) & (display(yPixel, xPixel+1:xPixel+width-1,:) == 255)
+              javaMethod('addAdjacency', adjacencyMatrix,[x-1 y-1], [x+1-1 y-1]);%account for 1->0 indexing
+              display(yPixel, xPixel+1:xPixel+width-1,1) = 131;
+              display(yPixel, xPixel+1:xPixel+width-1,2) = 255;
+              display(yPixel, xPixel+1:xPixel+width-1,3) = 119;
           end
           %if the next vertical point is in bounds and the image is clear between
           %them, add the adjacency to both points
-          if (r+1 <= rowLength) & (display(rPixel+1:rPixel+width-1, cPixel,:) == 255)
-             AdjacencyMatrix{r,c} = [AdjacencyMatrix{r,c} [r+1 c]];
-             AdjacencyMatrix{r+1,c} = [AdjacencyMatrix{r+1,c} [r c]];
-             display(rPixel+1:rPixel+width-1, cPixel,1) = 131;
-             display(rPixel+1:rPixel+width-1, cPixel,2) = 255;
-             display(rPixel+1:rPixel+width-1, cPixel,3) = 119;
+          if (y+1 <= yLength) & (display(yPixel+1:yPixel+width-1, xPixel,:) == 255)
+              javaMethod('addAdjacency', adjacencyMatrix, [x-1 y-1], [x-1 y+1-1]);%account for 1->0 indexing
+              display(yPixel+1:yPixel+width-1, xPixel,1) = 131;
+              display(yPixel+1:yPixel+width-1, xPixel,2) = 255;
+              display(yPixel+1:yPixel+width-1, xPixel,3) = 119;
           end
       end
    end
