@@ -49,4 +49,7 @@ Week 3: 10/8-10/14
 			    _________
 			___| 	     |_____
 	To-do:
-		Edit matlab file/function names	
+		Edit matlab file/function names
+		Redo java class path for matlab
+			currently uses full path on my machine, should be changed to a relative path if possible
+			matlab may need the full path, which I would have to generated from the path of the matlab files
