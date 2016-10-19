@@ -8,3 +8,17 @@ Learned more about Matlab and its ways to use and manipulate Java functionality
 Discussed with Michael some further steps as after this point we will be working on separate parts of the project, 
 	such as plans for how I will connect elevators and stairs to nodes and how will movement through those work
 	as well as what ways can we get A* to work (using a .jar file or running A* through Java instead).
+
+For the week of 10/14
+Researched ways to find elevators and stairs through use of image recogntion using Matlab, found two hopeful classes: normxcorr2 and 
+	vision.TemplateMatcher
+After extensive testing with the classes, such as using alternative images and rotating and fliping images, I determined that the best ways that 
+	those classes could be used was either having a image (the elevator or stairs) that is directly from the bigger image (blueprints) or use 
+	the location of where the image would be that we want to compare with. While it is possible that I have been misunderstanding how to use
+	these classes, especially with my inexperience with Matlab, I have concluded that these paths are dead ends, especially since each elevator 
+	and stairs for each floor of the blueprints are slightly different size, orentaiton, or some stairs have extra steps, meaning that its 
+	impossible to get the perfect copy of what is in the actual image, which is what these classes are asking for, and be able to use one image as
+	a base to search through the rest of the images.
+Next week I'll be discussing with the others some alternative methods to getting the elevators and stairs to connect. I believe that the most simplest
+	method we could do is having the user label areas as elevators and use their location on the image to connect between their location on different
+	floors.
