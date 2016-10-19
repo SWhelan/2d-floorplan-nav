@@ -5,4 +5,5 @@ target/*
 codecoverage/*
 /target/
 src/main/resources/static/tmp/*
+src/matlab/path.txt
 !src/Java7ForMatlab/Pathfinding/*.class

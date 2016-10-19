@@ -1,16 +1,20 @@
 
-function adjacencyMatrix = DotGrid (file, width, show)
+function path = DotGrid (file, width, show)
     image = imread(file);    
     imshow(image)
     [x,y] = ginput(2);
     x = round(x/width)
     y = round(y/width)
-    adjacencyMatrix = FindConnections(file, width, display);
+    adjacencyMatrix = FindConnections(file, width, show);
     aStarAgent = javaObjectEDT('Pathfinding.AStar');
     path = javaMethod('AStarSearch', aStarAgent, [x(1) y(1)], [x(2) y(2)], adjacencyMatrix)
     if show
         DisplayPath(image, width, path);
     end
+    formatSpec = '(%u, %u), ';
+    writeFile = fopen('path.txt', 'w');
+    fprintf(writeFile, formatSpec, transpose(path));
+    fclose(writeFile);
 end
 
 function DisplayPath(image, width, path)
@@ -41,23 +45,25 @@ function adjacencyMatrix = FindConnections (file, width, show)
     if show
         display = image;
     end
-    yBound = size(display, 1);%rows
+    yBound = size(image, 1);%rows
     yLength = floor(yBound/width);
-    xBound = size(display, 2);%columns
+    xBound = size(image, 2);%columns
     xLength = floor(xBound/width);
     adjacencyMatrix = javaObjectEDT('Pathfinding.AdjacencyMatrix', xBound, yBound);
     for y=1:yLength
        for x=1:xLength
           xPixel = x*width;
           yPixel = y*width;
-          if display(yPixel,xPixel,:) == 255
+          if image(yPixel,xPixel,:) == 255
               %color the dot black
-              display(yPixel,xPixel,:) = 0;
+              if show
+                display(yPixel,xPixel,:) = 0;
+              end
               %Check east, southeast, south, southwest points
                 %first check point is in bounds then check that the pixels
                 %between the points are clear
               %east
-              if (x+1 <= xLength) & (display(yPixel, xPixel+1:xPixel+width-1,:) == 255)
+              if (x+1 <= xLength) & (image(yPixel, xPixel+1:xPixel+width-1,:) == 255)
                   javaMethod('addAdjacency', adjacencyMatrix,[x y]-1, [x+1 y]-1);%account for 1->0 indexing
                   if show
                       display(yPixel, xPixel+1:xPixel+width-1,1) = 131;
@@ -81,7 +87,7 @@ function adjacencyMatrix = FindConnections (file, width, show)
                   end
               end
               %south
-              if (y+1 <= yLength) & (display(yPixel+1:yPixel+width-1, xPixel,:) == 255)
+              if (y+1 <= yLength) & (image(yPixel+1:yPixel+width-1, xPixel,:) == 255)
                   javaMethod('addAdjacency', adjacencyMatrix, [x y]-1, [x y+1]-1);%account for 1->0 indexing
                   if show
                       display(yPixel+1:yPixel+width-1, xPixel,1) = 131;
