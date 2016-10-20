@@ -56,11 +56,21 @@ public class ApplicationController {
 			FoundPath path = MatlabService.getRoute(pointAX, pointAY, fileA, pointBX, pointBY, fileB, filenames);
 			
 			Map<String, Object> attributes = new HashMap<>();
+			String[] afterPathFilenames = new String[filenames.length];
+			for(int i = 0; i < filenames.length; i++) {
+				afterPathFilenames[i] = getAfterPathFilename(filenames[i]);
+			}
+			attributes.put("filenames", afterPathFilenames);
 			return new ModelAndView(attributes, ROUTE_TEMPLATE);	
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	private static String getAfterPathFilename(String string) {
+		string = string.substring(0, string.lastIndexOf("."));
+		return string + "_path.jpg";
 	}
 
 	private static String[] getFileNamesArray(String filenames) {

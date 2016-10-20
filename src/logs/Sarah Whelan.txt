@@ -32,3 +32,24 @@ and the order of the floors to the path finding algorithm.
 A screenshot of this new screen is in /logs/screenshots/Sarah-Week3.png.
 Both images/floors are displayed on that page but the screenshot only shows the
 top image/floor.
+
+Week 4 10/15 - 10/21
+
+Created a class that handles creating a string command to run in the terminal/
+command line that calls a matlab script with arguments. This passes in the 
+data about the points that was collected last week. Also edited the matlab
+a little to get the list of file names of all the images in floor order
+that have been uploaded. This was difficult because everything wanted to
+change and sanitize the string differently and different characters were
+allowed in one language that did not work for the other. I spent a lot of time
+trying to pass in the list of file names via the command line but I simply
+could not figure out how to format the string to let me do that. I unfortunately
+gave up on that and wrote out the image filenames/paths to a file that matlab
+reads in. I think this week I was also supposed to parse the result from matlab.
+We ended up deciding for now that since we were already drawing the path on top
+of the images in matlab we would just have matlab save new images with the path
+on them (for now we'll see if that is all we want in the future re week 6). All I
+ended up having to do was display the newly saved files instead of the uploaded
+versions. We also decided that matlab would output the path to a file and output
+the places where the images/floors connect also to a file.
+
