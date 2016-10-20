@@ -9,14 +9,23 @@ import containers.FoundPath;
 
 public class MatlabService {
 
+	private static final String MATLAB_PATH = "\"E:\\matlab2016\\bin\\matlab.exe\"";
+	private static final String COMMAND_ARGS = " -nodisplay -nosplash -nodesktop -wait -r ";
+	private static final String SCRIPT_PATH = "src\\matlab\\DotGrid";
+	
 	public static FoundPath getRoute(int pointAX, int pointAY, String fileA, int pointBX, int pointBY, String fileB, String[] filenames) {
 		FoundPath path = new FoundPath();
 		StringBuilder command = new StringBuilder();
-		String results = callMatlab("\"E:\\matlab2016\\bin\\matlab.exe\" -nodisplay -nosplash -nodesktop -wait -r \"run('C:\\Users\\Sarah Whelan\\Desktop\\test1.m');\"");
+		command.append(MATLAB_PATH)
+		.append(COMMAND_ARGS)
+		.append("\"run('")
+		.append(SCRIPT_PATH)
+		.append("');\"");
+		callMatlab(command.toString());
 		return path;
 	}
 	
-	private static String callMatlab(String command){
+	private static void callMatlab(String command){
 		Runtime rt = Runtime.getRuntime();
 		try {
 			Process pr = rt.exec(command);
@@ -24,17 +33,10 @@ public class MatlabService {
 			List<Byte> results = new ArrayList<>();
 			int next = -1;
 			while((next = inputStream.read())  != -1){
-				results.add((byte)next);
+			        results.add((byte)next);
 			}
-			byte[] array = new byte[results.size()];
-			for (int i = 0; i < results.size(); i++) {
-				array[i] = results.get(i);
-			}
-			String result = new String(array);
-			return result;
 		} catch (IOException e) {
 			e.printStackTrace();
-			return "Something went wrong";
 		}
 	}
 

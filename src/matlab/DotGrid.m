@@ -1,5 +1,5 @@
 
-function adjacencyMatrix = DotGrid (file, width)
+function adjacencyMatrix = DotGrid (file, width)    
     image = imread(file);    
     imshow(image)
     [x,y] = ginput(2);
@@ -9,6 +9,7 @@ function adjacencyMatrix = DotGrid (file, width)
     aStarAgent = javaObjectEDT('Pathfinding.AStar');
     path = javaMethod('AStarSearch', aStarAgent, [x(1) y(1)], [x(2) y(2)], adjacencyMatrix)
     DisplayPath(image, width, path);
+    exit
 end
 
 function DisplayPath(image, width, path)
