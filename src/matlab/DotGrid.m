@@ -1,20 +1,7 @@
-function path = DotGrid (file, width, show)
-    image = imread(file);    
-    imshow(image)
-    [x,y] = ginput(2);
-    x = round(x/width);
-    y = round(y/width);
-    adjacencyMatrix = FindConnections(file, width, show);
-    aStarAgent = javaObjectEDT('Pathfinding.AStar');
-    path = javaMethod('AStarSearch', aStarAgent, [x(1) y(1)], [x(2) y(2)], adjacencyMatrix)
-    SavePath(file, image, width, path, show);
-    formatSpec = '(%u, %u), ';
-    writeFile = fopen('path.txt', 'w');
-    fprintf(writeFile, formatSpec, transpose(path));
-    fclose(writeFile);
-end
-
-function FindPath(x1, y1, z1, x2, y2, z2, file)
+function DotGrid(x1, y1, z1, x2, y2, z2)
+    filenames = GetFilenames()
+    file = filenames{1}
+    disp(cd)
     width = 36;
     show = 0;
     image = imread(file);
@@ -30,7 +17,33 @@ function FindPath(x1, y1, z1, x2, y2, z2, file)
     writeFile = fopen('path.txt', 'w');
     fprintf(writeFile, formatSpec, transpose(path));
     fclose(writeFile);
-    exit
+end
+
+function path = DotGrid2 (file, width, show)
+    image = imread(file);    
+    imshow(image)
+    [x,y] = ginput(2);
+    x = round(x/width);
+    y = round(y/width);
+    adjacencyMatrix = FindConnections(file, width, show);
+    aStarAgent = javaObjectEDT('Pathfinding.AStar');
+    path = javaMethod('AStarSearch', aStarAgent, [x(1) y(1)], [x(2) y(2)], adjacencyMatrix)
+    SavePath(file, image, width, path, show);
+    formatSpec = '(%u, %u), ';
+    writeFile = fopen('path.txt', 'w');
+    fprintf(writeFile, formatSpec, transpose(path));
+    fclose(writeFile);
+end
+
+function filenames = GetFilenames()
+    fileId = fopen('filenames.txt', 'r');
+    filenames = cell(0,1);
+    line = fgetl(fileId);
+    while ischar(line)
+        filenames{end + 1, 1} = line;
+        line = fgetl(fileId);
+    end
+    fclose(fileId);
 end
 
 function SavePath(file, image, width, path, show)

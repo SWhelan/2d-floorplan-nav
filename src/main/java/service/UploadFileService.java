@@ -15,10 +15,13 @@ import spark.Request;
 public class UploadFileService {
 	public static final String DEFAULT_IMAGE_LOCATION = "tmp/";
 	
-	private static final String MULTIPART_CONFIG_KEY = "org.eclipse.jetty.multipartConfig";
 	public static final String DEFAULT_MULTIPART_WRITE_LOCATION = "src/main/resources/static/" + DEFAULT_IMAGE_LOCATION;
+	public static final String MATLAB_PATH = "..\\main\\resources\\static\\tmp\\";
+	
+	private static final String MULTIPART_CONFIG_KEY = "org.eclipse.jetty.multipartConfig";
 	private static final String DEFAULT_MULTIPART_READ_LOCATION = "/tmp";
 	private static final String FILE_KEY = "file";
+
 	
 	public static String saveFileToDisk(Request rq) {
 		MultipartConfigElement multipartConfigElement = new MultipartConfigElement(DEFAULT_MULTIPART_READ_LOCATION);

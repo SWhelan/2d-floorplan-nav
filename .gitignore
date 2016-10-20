@@ -7,5 +7,6 @@ codecoverage/*
 src/main/resources/static/tmp/*
 src/matlab/javaclasspath.txt
 src/matlab/path.txt
+src/matlab/filenames.txt
 src/matlab/*_path.jpg
 !src/Java7ForMatlab/Pathfinding/*.class
