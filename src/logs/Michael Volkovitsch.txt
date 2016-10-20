@@ -53,3 +53,22 @@ Week 3: 10/8-10/14
 		Redo java class path for matlab
 			currently uses full path on my machine, should be changed to a relative path if possible
 			matlab may need the full path, which I would have to generated from the path of the matlab files
+			
+Week 4: 10/15-10/21
+
+	Added diagonal connections to adjacency possibilities
+		edited A* function to take this into account
+		edited matlab code to look for this and to display this
+	Made displayed path thicker
+	Added variables to control showing results
+	Now save path to image and text files
+	Realized java files weren't getting commited because of the gitignore, so changed gitignore to allow .class files for matlab relevant java classes
+	Wrote basic version of matlab function to be called from the website (FindPath)
+	To-do:
+		Finish redoing matlab structure
+			Make FindPath the file function and create different file for backend test methods (currently DotGrid)
+			Split most matlab functions into own files?
+		Save path information to folder Sarah wants
+		Add java files to repo
+			currently just the .class file from my computer are getting built to the repo
+					wasn't a problem since setting up to compile in java 7, but now other people may want to start editing them so I need to move the project

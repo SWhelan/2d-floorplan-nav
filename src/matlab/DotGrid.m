@@ -1,16 +1,31 @@
-
 function path = DotGrid (file, width, show)
     image = imread(file);    
     imshow(image)
     [x,y] = ginput(2);
-    x = round(x/width)
-    y = round(y/width)
+    x = round(x/width);
+    y = round(y/width);
     adjacencyMatrix = FindConnections(file, width, show);
     aStarAgent = javaObjectEDT('Pathfinding.AStar');
     path = javaMethod('AStarSearch', aStarAgent, [x(1) y(1)], [x(2) y(2)], adjacencyMatrix)
-    if show
-        DisplayPath(image, width, path);
-    end
+    SavePath(file, image, width, path, show);
+    formatSpec = '(%u, %u), ';
+    writeFile = fopen('path.txt', 'w');
+    fprintf(writeFile, formatSpec, transpose(path));
+    fclose(writeFile);
+end
+
+function FindPath(x1, y1, z1, x2, y2, z2, file)
+    width = 36;
+    show = 0;
+    image = imread(file);
+    x = [x1 x2];
+    y = [y1 y2];
+    x = round(x/width);
+    y = round(y/width);
+    adjacencyMatrix = FindConnections(file, width, show);
+    aStarAgent = javaObjectEDT('Pathfinding.AStar');
+    path = javaMethod('AStarSearch', aStarAgent, [x(1) y(1)], [x(2) y(2)], adjacencyMatrix);
+    SavePath(file, image, width, path, show);
     formatSpec = '(%u, %u), ';
     writeFile = fopen('path.txt', 'w');
     fprintf(writeFile, formatSpec, transpose(path));
@@ -18,7 +33,7 @@ function path = DotGrid (file, width, show)
     exit
 end
 
-function DisplayPath(image, width, path)
+function SavePath(file, image, width, path, show)
     for i=1:size(path,1)-1
         p1 = path(i,:);
         p2 = path(i+1,:);
@@ -29,15 +44,19 @@ function DisplayPath(image, width, path)
         xPixel = p1(1)*width;
         yPixel = p1(2)*width;
         for i=1:width
-            image(yPixel, xPixel, 1) = 77;
-            image(yPixel, xPixel, 2) = 56;
-            image(yPixel, xPixel, 3) = 153;
+            image(yPixel-1:yPixel+1, xPixel-1:xPixel+1, 1) = 77;
+            image(yPixel-1:yPixel+1, xPixel-1:xPixel+1, 2) = 56;
+            image(yPixel-1:yPixel+1, xPixel-1:xPixel+1, 3) = 153;
             yPixel = yPixel + yDir;
             xPixel = xPixel + xDir;
-end
+        end
     end
-    figure
-    imshow(image)
+    filename = [file(1:size(file,2)-4) '_path.jpg'];
+    imwrite(image, filename);
+    if show
+        figure
+        imshow(image)
+    end
 end
 
 %read the image pointed to by file witha dot spacing of width
