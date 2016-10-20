@@ -27,7 +27,7 @@ function DisplayPath(image, width, path)
     imshow(image)
 end
 
-%read the image pointed to by file witha dot spacing of width
+%read the image pointed to by file with a dot spacing of width
 function adjacencyMatrix = FindConnections (file, width)
 image = imread(file);
 display = image;

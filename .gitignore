@@ -5,4 +5,4 @@ target/*
 codecoverage/*
 /target/
 src/main/resources/static/tmp/*
-src/matlab/*.txt
+src/matlab/javaclasspath.txt
