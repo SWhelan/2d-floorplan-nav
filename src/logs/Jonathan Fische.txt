@@ -22,3 +22,17 @@ After extensive testing with the classes, such as using alternative images and r
 Next week I'll be discussing with the others some alternative methods to getting the elevators and stairs to connect. I believe that the most simplest
 	method we could do is having the user label areas as elevators and use their location on the image to connect between their location on different
 	floors.
+
+For the week of 10/21
+Decided as a group to use the Cascade Object Detector, but first I had to train it.
+It took me some time to learn how the training works, with using the Training Image Labler app and getting the function to work,
+	but most of my time was tweeking it and adding more images to compare to.
+As you can see in Jonathan-1-Week4 image in the screenshot folder, the first few tries with the trainer were close, but flawed, but in Jonathan-2-Week4
+	both bounding boxes are in the correct places, but not aligned. Same goes for all in the Glennan folder, but they can at times have more than 
+	one bounding box in it at once. Either way, this method to find the elevators looks hopeful.
+The bounding boxes will be fixed by adding more images to the training that I will have done by this weekend, same goes for the stairs which I have worked
+	on but are not in any presentable shape, since running it has nothing close to correct showing up, probably due to the fact that I need more 
+	images involving every rotation and variation that the stairs could be, which are alot more than any variation that the elevators could be. 
+	Getting to this point took me some time, but now that I understand how this method works, I can manipulate it better.
+Uploaded are the xml file of ElevatorDetector which is the trained file that is used in the m file. In the m file you can change the image file to see how  
+	the different images are effected by the Cascade Object Detector.
