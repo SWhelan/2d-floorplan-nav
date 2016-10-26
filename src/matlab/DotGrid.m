@@ -1,7 +1,7 @@
 function DotGrid(x1, y1, z1, x2, y2, z2)
-    filenames = GetFilenames()
-    file = filenames{1}
-    disp(cd)
+    InitClasspath();
+    filenames = GetFilenames();
+    file = filenames{1};
     width = 36;
     show = 0;
     image = imread(file);
@@ -17,6 +17,12 @@ function DotGrid(x1, y1, z1, x2, y2, z2)
     writeFile = fopen('path.txt', 'w');
     fprintf(writeFile, formatSpec, transpose(path));
     fclose(writeFile);
+    exit;
+end
+
+function InitClasspath ()
+    classpathData = ReadFile('javaclasspath.txt');
+    javaaddpath(classpathData{1});
 end
 
 function path = DotGrid2 (file, width, show)
@@ -36,11 +42,15 @@ function path = DotGrid2 (file, width, show)
 end
 
 function filenames = GetFilenames()
-    fileId = fopen('filenames.txt', 'r');
-    filenames = cell(0,1);
+    filenames = ReadFile('filenames.txt');
+end
+
+function data = ReadFile(filename)
+    fileId = fopen(filename, 'r');
+    data = cell(0,1);
     line = fgetl(fileId);
     while ischar(line)
-        filenames{end + 1, 1} = line;
+        data{end + 1, 1} = line;
         line = fgetl(fileId);
     end
     fclose(fileId);
