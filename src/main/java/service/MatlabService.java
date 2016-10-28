@@ -2,34 +2,31 @@ package service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import containers.FoundPath;
+import containers.Directions;
 
 public class MatlabService {
 
 	private static final String FILENAMES_TXT_PATH = "src/matlab/filenames.txt";
 	private static final String MATLAB_PATH = "\"E:\\matlab2016\\bin\\matlab.exe\"";
-	private static final String[] COMMAND_ARGS = {MATLAB_PATH, "-nodisplay", "-nosplash", "-nodesktop", "-wait", "-r"};
+	private static final String[] STANDARD_COMMAND = {MATLAB_PATH, "-nodisplay", "-nosplash", "-nodesktop", "-wait", "-r"};
 	private static final String SCRIPT_PATH = "src\\matlab\\DotGrid";
 	
-	public static FoundPath getRoute(int pointAX, int pointAY, String fileA, int pointBX, int pointBY, String fileB, String[] filenames) {
-		FoundPath path = new FoundPath();
-		makeFilenamesFile(filenames);
-		String[] command = new String[COMMAND_ARGS.length + 1];
-		for (int i = 0; i < COMMAND_ARGS.length; i++) {
-			command[i] = COMMAND_ARGS[i];
-		}
-		command[command.length - 1] = createMatlabRunCommand(pointAX, pointAY, fileA, pointBX, pointBY, fileB, filenames);
+	public static void getRoute(Directions directions) {
+		makeFilenamesFile(directions.getOriginalFileNames());
+		String customRunCommand = generateRunCommand(
+				directions.getA().getX(), directions.getA().getY(), directions.getFileName(directions.getA().getIndex()), 
+				directions.getB().getX(), directions.getB().getY(), directions.getFileName(directions.getA().getIndex()), 
+				directions.getOriginalFileNames());
+		List<String> command = Arrays.asList(STANDARD_COMMAND);
+		command.add(customRunCommand);
 		executeCommand(command);
-		return path;
 	}
 
-	private static String createMatlabRunCommand(int pointAX, int pointAY, String fileA, int pointBX, int pointBY, String fileB, String[] filenames) {
+	private static String generateRunCommand(int pointAX, int pointAY, String fileA, int pointBX, int pointBY, String fileB, List<String> filenames) {
 		StringBuilder builder = new StringBuilder();
 		builder
 		.append("run('")
@@ -39,47 +36,34 @@ public class MatlabService {
 		.append(", ")
 		.append(pointAY)
 		.append(", ")
-		.append(getMatlabIndex(fileA, filenames))
+		.append(Util.getMatlabIndex(fileA, filenames))
 		.append(", ")
 		.append(pointBX)
 		.append(", ")
 		.append(pointBY)
 		.append(", ")
-		.append(getMatlabIndex(fileB, filenames))
+		.append(Util.getMatlabIndex(fileB, filenames))
 		.append(")")
 		.append("');");
 		return builder.toString();
 	}
-	
-	private static int getMatlabIndex(String fileA, String[] filenames) {
-		for(int i = 0; i < filenames.length; i++) {
-			if(fileA.equals(filenames[i])) {
-				return i + 1; // MATLAB indexing starts at 1
-			}
-		}
-		return -1;
-	}
 
-	private static void makeFilenamesFile(String[] array) {
+	private static void makeFilenamesFile(List<String> filenames) {
 		StringBuilder builder = new StringBuilder();		
-		for (String item : array) {
+		for (String item : filenames) {
 			builder
 			.append(UploadFileService.MATLAB_PATH)
 			.append(item)
 			.append("\n");
 		}
-		if(array.length > 0) {
+		if(filenames.size() > 0) {
 			builder.deleteCharAt(builder.length() - 1);
 		}
-		Path path = Paths.get(FILENAMES_TXT_PATH);
-		try {
-			Files.write(path, builder.toString().getBytes());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Util.writeFile(FILENAMES_TXT_PATH, builder.toString());
 	}
 	
-	private static String executeCommand(String[] command){
+	private static String executeCommand(List<String> commandParts){
+		String[] command = commandParts.toArray(new String[commandParts.size()]);
 		Runtime rt = Runtime.getRuntime();
 		try {
 			Process pr = rt.exec(command);

@@ -22,6 +22,7 @@ function addPoint(event) {
 	} else {
 		pointB = point;
 		displayClick(event);
+		displayLoadingScreen();
 		sendData(pointA, pointB);
 	}
 }
@@ -61,10 +62,16 @@ function sendData(pointA, pointB) {
 	xhr.open('POST', '/uploadPoints', true);
 	xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
-	xhr.onload = function () {
-		console.log("got response");
+	xhr.onload = function (data) {
+		console.log(data);
 	};
 	
 	var data = JSON.stringify({pointA: pointA, pointB: pointB});
 	xhr.send(data);
 }
+
+function displayLoadingScreen() {
+	
+}
+
+function hideLoadingScreen() {}

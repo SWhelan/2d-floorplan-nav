@@ -1,13 +1,18 @@
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import containers.FoundPath;
+import containers.Directions;
+import containers.Directions.Coordinate;
 import service.MatlabService;
 import service.UploadFileService;
+import service.Util;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -38,47 +43,36 @@ public class ApplicationController {
 		return new ModelAndView(attributes, ROUTE_TEMPLATE);
 	}
 
-	public static ModelAndView getRoute(Request rq, Response rs) {
+	public static Directions getRoute(Request rq, Response rs) {
 		String rawJSON = rq.body();
 		ObjectMapper mapper = new ObjectMapper();		
 		try {
 			JsonNode node = mapper.readValue(rawJSON, JsonNode.class);
 			JsonNode pointA = node.get("pointA");
 			JsonNode pointB = node.get("pointB");
-			int pointAX = pointA.get("xcoord").asInt();
-			int pointAY = pointA.get("ycoord").asInt();
-			String fileA = getFileNameOnly(pointA.get("filename").asText());
-			int pointBX = pointB.get("xcoord").asInt();
-			int pointBY = pointB.get("ycoord").asInt();
-			String fileB = getFileNameOnly(pointB.get("filename").asText());
-			String[] filenames = getFileNamesArray(rq.cookie("filenames"));
 			
-			FoundPath path = MatlabService.getRoute(pointAX, pointAY, fileA, pointBX, pointBY, fileB, filenames);
-			
-			Map<String, Object> attributes = new HashMap<>();
-			String[] afterPathFilenames = new String[filenames.length];
-			for(int i = 0; i < filenames.length; i++) {
-				afterPathFilenames[i] = getAfterPathFilename(filenames[i]);
-			}
-			attributes.put("filenames", afterPathFilenames);
-			return new ModelAndView(attributes, ROUTE_TEMPLATE);	
+			Directions directions = new Directions();
+			directions.setOriginalFileNames(getFileNames(rq.cookie("filenames")));
+			directions.setFileA(getFileNameOnly(pointA.get("filename").asText()));
+			directions.setA(new Coordinate(
+					Util.getJavaIndex(directions.getFileA(), directions.getOriginalFileNames()),
+					pointA.get("xcoord").asInt(),
+					pointA.get("ycoord").asInt()));
+			directions.setFileB(getFileNameOnly(pointB.get("filename").asText()));
+			directions.setB(new Coordinate(
+					Util.getJavaIndex(directions.getFileB(), directions.getOriginalFileNames()),
+					pointB.get("xcoord").asInt(),
+					pointB.get("ycoord").asInt()));	
+			MatlabService.getRoute(directions);	
+			return directions;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	private static String getAfterPathFilename(String string) {
-		string = string.substring(0, string.lastIndexOf("."));
-		return string + "_path.jpg";
-	}
-
-	private static String[] getFileNamesArray(String filenames) {
-		String[] temp = filenames.split(",");
-		for(int i = 0; i < temp.length; i++) {
-			temp[i] = temp[i].trim();
-		}
-		return temp;
+	private static List<String> getFileNames(String filenames) {
+		return Arrays.asList(filenames.split(",")).stream().map(e -> e.trim()).collect(Collectors.toList());		
 	}
 
 	private static String getFileNameOnly(String text) {
