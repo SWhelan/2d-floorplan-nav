@@ -3,7 +3,6 @@ package service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import containers.Directions;
@@ -11,6 +10,7 @@ import containers.Directions;
 public class MatlabService {
 
 	private static final String FILENAMES_TXT_PATH = "src/matlab/filenames.txt";
+	private static final String PATH_TXT_PATH = "src/matlab/path.txt";
 	private static final String MATLAB_PATH = "\"E:\\matlab2016\\bin\\matlab.exe\"";
 	private static final String[] STANDARD_COMMAND = {MATLAB_PATH, "-nodisplay", "-nosplash", "-nodesktop", "-wait", "-r"};
 	private static final String SCRIPT_PATH = "src\\matlab\\DotGrid";
@@ -21,9 +21,13 @@ public class MatlabService {
 				directions.getA().getX(), directions.getA().getY(), directions.getFileName(directions.getA().getIndex()), 
 				directions.getB().getX(), directions.getB().getY(), directions.getFileName(directions.getA().getIndex()), 
 				directions.getOriginalFileNames());
-		List<String> command = Arrays.asList(STANDARD_COMMAND);
-		command.add(customRunCommand);
+		String[] command = new String[STANDARD_COMMAND.length + 1];
+		for (int i = 0; i < STANDARD_COMMAND.length; i++) {
+			command[i] = STANDARD_COMMAND[i];
+		}
+		command[command.length - 1] = customRunCommand;
 		executeCommand(command);
+		directions.setSteps(Util.readFile(PATH_TXT_PATH));
 	}
 
 	private static String generateRunCommand(int pointAX, int pointAY, String fileA, int pointBX, int pointBY, String fileB, List<String> filenames) {
@@ -62,8 +66,7 @@ public class MatlabService {
 		Util.writeFile(FILENAMES_TXT_PATH, builder.toString());
 	}
 	
-	private static String executeCommand(List<String> commandParts){
-		String[] command = commandParts.toArray(new String[commandParts.size()]);
+	private static String executeCommand(String[] command){
 		Runtime rt = Runtime.getRuntime();
 		try {
 			Process pr = rt.exec(command);

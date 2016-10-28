@@ -50,20 +50,23 @@ public class ApplicationController {
 			JsonNode node = mapper.readValue(rawJSON, JsonNode.class);
 			JsonNode pointA = node.get("pointA");
 			JsonNode pointB = node.get("pointB");
-			
 			Directions directions = new Directions();
 			directions.setOriginalFileNames(getFileNames(rq.cookie("filenames")));
+			
 			directions.setFileA(getFileNameOnly(pointA.get("filename").asText()));
 			directions.setA(new Coordinate(
 					Util.getJavaIndex(directions.getFileA(), directions.getOriginalFileNames()),
 					pointA.get("xcoord").asInt(),
 					pointA.get("ycoord").asInt()));
+			
 			directions.setFileB(getFileNameOnly(pointB.get("filename").asText()));
 			directions.setB(new Coordinate(
 					Util.getJavaIndex(directions.getFileB(), directions.getOriginalFileNames()),
 					pointB.get("xcoord").asInt(),
-					pointB.get("ycoord").asInt()));	
-			MatlabService.getRoute(directions);	
+					pointB.get("ycoord").asInt()));
+			
+			MatlabService.getRoute(directions);
+			directions.preprocessForResponse();
 			return directions;
 		} catch (IOException e) {
 			e.printStackTrace();

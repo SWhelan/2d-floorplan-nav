@@ -53,3 +53,26 @@ ended up having to do was display the newly saved files instead of the uploaded
 versions. We also decided that matlab would output the path to a file and output
 the places where the images/floors connect also to a file.
 
+Week 5 10/22 - 10/28
+
+Abstracted reading from a file in matlab and loaded the class path on method call.
+Filled in the container class with the information javascript would need to update
+the page and display the path and the steps. Added gson to handle taking this class
+and serializing it to give it to the javascript. Refactored matlab service to use
+the container instead of many method parameters. This way anything that needs to
+process data before the results are returned can use the same container. Moved some
+files around for convenience (js and css to their own folders if they are 3rd party
+libraries). Got some scaffolding code that handles moving the points around when
+the window resizes. Also added code that generates some "pretty" steps in that there
+is a list of strings that should tell someone where to go. This will be improved later
+but for now it just generates a list of steps and then displays that on the screen.
+It now also swaps out the original image for the one that has the path drawn on it.
+Matlab is actually drawing the path on the image and that may be good enough for now.
+I think next week I was supposed to display the path on the image but since that is
+already happening enough I may move forward to getting the interface to accept points
+for exclusion instead and then revisit displaying the path in a more visually appealing
+fashion. Though I think the exclusion points are more important and I think Jonathan
+is scheduled for that next week as well so we might be better off if we do that at 
+around the same time.
+
+Screenshots in folder for week 5.

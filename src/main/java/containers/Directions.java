@@ -1,6 +1,8 @@
 package containers;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Directions {
 	
@@ -38,6 +40,7 @@ public class Directions {
 	private List<String> originalFileNames;
 	private List<String> afterPathFileNames;
 	private List<String> steps;
+	private List<String> prettySteps;
 	
 	public Directions() {
 		// No argument constructor for gson
@@ -111,5 +114,27 @@ public class Directions {
 		this.fileB = fileB;
 	}
 	
+	public void preprocessForResponse() {
+		this.generatePrettySteps(this.generateCoords());
+	}
 	
+	private List<Coordinate> generateCoords() {
+		return this.steps.stream()
+				.map(string -> string.split(","))
+				.map(array -> new Coordinate(0, Integer.parseInt(array[0]), Integer.parseInt(array[1])))
+				.collect(Collectors.toList());
+	}
+	
+	private void generatePrettySteps(List<Coordinate> coords) {
+		this.prettySteps = new ArrayList<>();
+		prettySteps.add("Start");
+		while(coords.size() > 1) {
+			prettySteps.add(generatePrettyStep(coords.remove(0), coords.remove(0)));
+		}
+		prettySteps.add("End");
+	}
+
+	private String generatePrettyStep(Coordinate coord1, Coordinate coord2) {
+		return "Go to " + coord2.getX() + "x and " + coord2.getY() + "y.";
+	}
 }

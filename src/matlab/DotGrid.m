@@ -13,7 +13,7 @@ function DotGrid(x1, y1, z1, x2, y2, z2)
     aStarAgent = javaObjectEDT('Pathfinding.AStar');
     path = javaMethod('AStarSearch', aStarAgent, [x(1) y(1)], [x(2) y(2)], adjacencyMatrix);
     SavePath(file, image, width, path, show);
-    formatSpec = '(%u, %u), ';
+    formatSpec = '%u,%u\n';
     writeFile = fopen('path.txt', 'w');
     fprintf(writeFile, formatSpec, transpose(path));
     fclose(writeFile);
