@@ -72,3 +72,25 @@ Week 4: 10/15-10/21
 		Add java files to repo
 			currently just the .class file from my computer are getting built to the repo
 					wasn't a problem since setting up to compile in java 7, but now other people may want to start editing them so I need to move the project
+					
+Week 5: 10/22-10/28
+
+	Began 3D version of A* search and adjacency matrix
+	Added another dimension to the AdjacencyMatrix class
+	Changed matlab code to use a list of floors
+		Finds connections floor-by-floor
+		Takes the found path and draws relevant parts on each image
+		Currently doesn't connect floors so it can't find a path between floors, but it can find a path on any floor in a stack of images
+			Waiting on Jonathan's code to join floors
+	Started looking at the Bron-Kerbosch algorithm for reducing the points to maximal cliques
+		potential performance increase as well as a sense of rooms
+	To-do:
+		Once Jonathan gets code to link elevators/stairs to points, modify the A* java code to use these connections
+			Current plan is to recursively find paths between all floor connections and then build the shortest path from that
+				Example:
+					stairs A and B join floors 1 and 2, and stairs C and D join floors 2 and 3
+					find a path between point1 on floor 1 and point2 on floor 3
+						compute p1->A, p1->B, A->C, A->D, B->C, B->D, C->point2, D->point2 and find the shortest path you can make with those
+			Performance has been much better than expected, so we may be able to just search the entire space with a heuristic that takes floors into account
+				
+		

@@ -1,34 +1,46 @@
-function DotGrid(x1, y1, z1, x2, y2, z2)
-    filenames = GetFilenames()
-    file = filenames{1}
-    disp(cd)
-    width = 36;
-    show = 0;
-    image = imread(file);
-    x = [x1 x2];
-    y = [y1 y2];
-    x = round(x/width);
-    y = round(y/width);
-    adjacencyMatrix = FindConnections(file, width, show);
-    aStarAgent = javaObjectEDT('Pathfinding.AStar');
-    path = javaMethod('AStarSearch', aStarAgent, [x(1) y(1)], [x(2) y(2)], adjacencyMatrix);
-    SavePath(file, image, width, path, show);
-    formatSpec = '(%u, %u), ';
-    writeFile = fopen('path.txt', 'w');
-    fprintf(writeFile, formatSpec, transpose(path));
-    fclose(writeFile);
-end
+% function DotGrid(x1, y1, z1, x2, y2, z2)
+%     filenames = GetFilenames()
+%     file = filenames{1}
+%     disp(cd)
+%     width = 36;
+%     show = 0;
+%     image = imread(file);
+%     x = [x1 x2];
+%     y = [y1 y2];
+%     x = round(x/width);
+%     y = round(y/width);
+%     adjacencyMatrix = FindConnections(file, width, show);
+%     aStarAgent = javaObjectEDT('Pathfinding.AStar');
+%     path = javaMethod('aStarSearch', aStarAgent, [x(1) y(1)], [x(2) y(2)], adjacencyMatrix);
+%     SavePath(file, image, width, path, show);
+%     formatSpec = '(%u, %u), ';
+%     writeFile = fopen('path.txt', 'w');
+%     fprintf(writeFile, formatSpec, transpose(path));
+%     fclose(writeFile);
+% end
 
-function path = DotGrid2 (file, width, show)
-    image = imread(file);    
-    imshow(image)
-    [x,y] = ginput(2);
+function path = DotGrid (files, width, show)
+    x = [];
+    y = [];
+    z = [];
+    for i=1:size(files,2)
+        image = imread(files{i});
+        imshow(image);
+        title(files{i});
+        [a,b] = ginput();
+        x = [x a];
+        y = [y b];
+        for n=1:size(a, 1)
+            z = [z i];
+        end
+    end
+    close all;
     x = round(x/width);
     y = round(y/width);
-    adjacencyMatrix = FindConnections(file, width, show);
+    adjacencyMatrix = ConnectBuilding(files, width, show);
     aStarAgent = javaObjectEDT('Pathfinding.AStar');
-    path = javaMethod('AStarSearch', aStarAgent, [x(1) y(1)], [x(2) y(2)], adjacencyMatrix)
-    SavePath(file, image, width, path, show);
+    path = javaMethod('aStarSearch', aStarAgent, [x(1) y(1) z(1)]-1, [x(2) y(2) z(2)]-1, adjacencyMatrix)
+    SavePath(files, width, path, show);
     formatSpec = '(%u, %u), ';
     writeFile = fopen('path.txt', 'w');
     fprintf(writeFile, formatSpec, transpose(path));
@@ -46,34 +58,51 @@ function filenames = GetFilenames()
     fclose(fileId);
 end
 
-function SavePath(file, image, width, path, show)
+function SavePath(files, width, path, shows)
+    images = cell(size(files, 2), 1);
+    for i=1:size(files,2)
+        images{i} = imread(files{1});
+    end
     for i=1:size(path,1)-1
         p1 = path(i,:);
         p2 = path(i+1,:);
-        xDir = p2(1) - p1(1);
-        xDir = xDir./abs(xDir);
-        yDir = p2(2) - p1(2);
-        yDir = yDir./abs(yDir);
-        xPixel = p1(1)*width;
-        yPixel = p1(2)*width;
-        for i=1:width
-            image(yPixel-1:yPixel+1, xPixel-1:xPixel+1, 1) = 77;
-            image(yPixel-1:yPixel+1, xPixel-1:xPixel+1, 2) = 56;
-            image(yPixel-1:yPixel+1, xPixel-1:xPixel+1, 3) = 153;
-            yPixel = yPixel + yDir;
-            xPixel = xPixel + xDir;
+        if p1(3) == p2(3)
+            xDir = p2(1) - p1(1);
+            xDir = xDir./abs(xDir);
+            yDir = p2(2) - p1(2);
+            yDir = yDir./abs(yDir);
+            xPixel = p1(1)*width;
+            yPixel = p1(2)*width;
+            for i=1:width
+                images{p1(3)}(yPixel-1:yPixel+1, xPixel-1:xPixel+1, 1) = 77;
+                images{p1(3)}(yPixel-1:yPixel+1, xPixel-1:xPixel+1, 2) = 56;
+                images{p1(3)}(yPixel-1:yPixel+1, xPixel-1:xPixel+1, 3) = 153;
+                yPixel = yPixel + yDir;
+                xPixel = xPixel + xDir;
+            end
         end
     end
-    filename = [file(1:size(file,2)-4) '_path.jpg'];
-    imwrite(image, filename);
-    if show
-        figure
-        imshow(image)
+    for i=1:size(files,2)
+       filename = [files{i}(1:size(files{i}, 2)-4) '_path.jpg'];
+       imwrite(images{i}, filename);
+       if shows
+            figure;
+            imshow(images{i});
+            title(filename);
+       end
     end
 end
 
-%read the image pointed to by file witha dot spacing of width
-function adjacencyMatrix = FindConnections (file, width, show)
+function adjacencyMatrix = ConnectBuilding (files, width, show)
+    floors = size(files, 2);
+    adjacencyMatrix = javaObjectEDT('Pathfinding.AdjacencyMatrix', floors);
+    for f=1:floors
+        ConnectFloor(files{f}, width, f, adjacencyMatrix, show);
+    end
+end
+
+%read the image pointed to by file with a dot spacing of width
+function ConnectFloor (file, width, f, adjacencyMatrix, show)
     image = imread(file);
     if show
         display = image;
@@ -82,7 +111,7 @@ function adjacencyMatrix = FindConnections (file, width, show)
     yLength = floor(yBound/width);
     xBound = size(image, 2);%columns
     xLength = floor(xBound/width);
-    adjacencyMatrix = javaObjectEDT('Pathfinding.AdjacencyMatrix', xBound, yBound);
+    javaMethod('createFloor', adjacencyMatrix, xBound, yBound);
     for y=1:yLength
        for x=1:xLength
           xPixel = x*width;
@@ -97,7 +126,7 @@ function adjacencyMatrix = FindConnections (file, width, show)
                 %between the points are clear
               %east
               if (x+1 <= xLength) & (image(yPixel, xPixel+1:xPixel+width-1,:) == 255)
-                  javaMethod('addAdjacency', adjacencyMatrix,[x y]-1, [x+1 y]-1);%account for 1->0 indexing
+                  javaMethod('addAdjacency', adjacencyMatrix,[x y f]-1, [x+1 y f]-1);%account for 1->0 indexing
                   if show
                       display(yPixel, xPixel+1:xPixel+width-1,1) = 131;
                       display(yPixel, xPixel+1:xPixel+width-1,2) = 255;
@@ -106,7 +135,7 @@ function adjacencyMatrix = FindConnections (file, width, show)
               end
               %southeast
               if (x+1 <= xLength) & (y+1 <= yLength) & CheckDiagonal([y x], [y+1 x+1], image, width)
-                  javaMethod('addAdjacency', adjacencyMatrix,[x y]-1, [x+1 y+1]-1);%account for 1->0 indexing
+                  javaMethod('addAdjacency', adjacencyMatrix,[x y f]-1, [x+1 y+1 f]-1);%account for 1->0 indexing
                   if show
                       r = yPixel+1;
                       c = xPixel+1;
@@ -121,7 +150,7 @@ function adjacencyMatrix = FindConnections (file, width, show)
               end
               %south
               if (y+1 <= yLength) & (image(yPixel+1:yPixel+width-1, xPixel,:) == 255)
-                  javaMethod('addAdjacency', adjacencyMatrix, [x y]-1, [x y+1]-1);%account for 1->0 indexing
+                  javaMethod('addAdjacency', adjacencyMatrix, [x y f]-1, [x y+1 f]-1);%account for 1->0 indexing
                   if show
                       display(yPixel+1:yPixel+width-1, xPixel,1) = 131;
                       display(yPixel+1:yPixel+width-1, xPixel,2) = 255;
@@ -130,7 +159,7 @@ function adjacencyMatrix = FindConnections (file, width, show)
               end
               %southwest
               if (x-1 >= 1) & (y+1 <= yLength) & CheckDiagonal([y x], [y+1 x-1], image, width)
-                  javaMethod('addAdjacency', adjacencyMatrix,[x y]-1, [x-1 y+1]-1);%account for 1->0 indexing
+                  javaMethod('addAdjacency', adjacencyMatrix,[x y f]-1, [x-1 y+1 f]-1);%account for 1->0 indexing
                   if show
                       r = yPixel+1;
                       c = xPixel-1;
@@ -147,7 +176,9 @@ function adjacencyMatrix = FindConnections (file, width, show)
        end
     end
     if show
-        imshow(display)
+        figure;
+        imshow(display);
+        title(file);
     end
 end
 
