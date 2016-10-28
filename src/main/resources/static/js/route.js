@@ -1,5 +1,9 @@
 var pointA = null;
 var pointB = null;
+var currWindowWidth = null;
+var currWindowHeight = null;
+var prevWindowWidth = null;
+var prevWindowHeight = null;
 
 document.addEventListener("DOMContentLoaded", function() {
 	var floors = getFloors();
@@ -8,6 +12,9 @@ document.addEventListener("DOMContentLoaded", function() {
 			addPoint(event);
 		}
 	}
+	
+	window.onresize = handleResize;
+	updateWindowSize();
 });
 
 function addPoint(event) {
@@ -22,6 +29,7 @@ function addPoint(event) {
 	} else {
 		pointB = point;
 		displayClick(event);
+		displayLoadingScreen();
 		sendData(pointA, pointB);
 	}
 }
@@ -54,6 +62,7 @@ function displayClick(event) {
 	holder.innerHTML += "<div class='point' style='top: "+ (event.pageY - margin) +"px; left: " + Math.round(event.pageX - holder.getBoundingClientRect().left - margin) + "px;'></div>";
 }
 
+var test = '{"A":{"index":0,"x":1033,"y":331},"fileA":"Glennan2.jpg","B":{"index":0,"x":554,"y":1276},"fileB":"Glennan2.jpg","originalFileNames":["Glennan2.jpg"],"steps":["30,10","30,11","29,12","28,13","27,14","26,15","26,16","25,17","25,18","24,19","24,20","23,21","23,22","22,23","22,24","21,25","21,26","21,27","20,28","20,29","19,30","19,31","18,32","18,33","17,34","17,35","16,36"],"prettySteps":["Start","Go to 30x and 11y.","Go to 28x and 13y.","Go to 26x and 15y.","Go to 25x and 17y.","Go to 24x and 19y.","Go to 23x and 21y.","Go to 22x and 23y.","Go to 21x and 25y.","Go to 21x and 27y.","Go to 20x and 29y.","Go to 19x and 31y.","Go to 18x and 33y.","Go to 17x and 35y.","End"]}';
 function sendData(pointA, pointB) {
 	// https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/send
 	
@@ -61,10 +70,66 @@ function sendData(pointA, pointB) {
 	xhr.open('POST', '/uploadPoints', true);
 	xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
-	xhr.onload = function () {
-		console.log("got response");
+	xhr.onload = function (data) {
+		hideLoadingScreen();
+		var response = JSON.parse(data.currentTarget.response);
+		var steps = response.prettySteps;
+		displaySteps(steps);
+		swapImages();
 	};
 	
 	var data = JSON.stringify({pointA: pointA, pointB: pointB});
 	xhr.send(data);
+}
+
+function displayLoadingScreen() {
+	
+}
+
+function hideLoadingScreen() {
+	
+}
+
+function handleResize() {
+	updateWindowSize();
+	var points = document.getElementsByClassName("point");
+	for(var i = 0; i < points.length; i++) {
+		movePoint(points.item(i));
+	}
+}
+
+function movePoint(point) {
+	if(prevWindowHeight == null) {
+		return;
+	}
+	var newTop = parseInt(point.style.top.substring(0, point.style.top.length - 2)) + ((currWindowHeight - prevWindowHeight)/2) + "px";
+	var newLeft = parseInt(point.style.left.substring(0, point.style.left.length - 2)) + ((currWindowWidth - prevWindowWidth)/2) + "px";
+	console.log(newTop);
+	console.log(newLeft);
+	point.style.top = newTop;
+	point.style.left = newLeft;
+}
+
+function updateWindowSize() {
+	prevWindowWidth = currWindowWidth;
+	prevWindowHeight = currWindowHeight;
+	currWindowWidth = window.innerWidth;
+	currWindowHeight = window.innerHeight;
+}
+
+function displaySteps(steps) {
+	console.log(steps);
+	var holder = element("steps-holder");
+	for(var i = 0; i < steps.length; i++) {
+		holder.innerHTML += "<div class='step'>" + steps[i] + "</div>";
+	}
+}
+
+function swapImages() {
+	var images = document.getElementsByClassName("floor");
+	for(var i = 0; i < images.length; i++) {
+		var current = images.item(i).src;	
+		images.item(i).src = current.substring(0, current.length - 4) + "_path.jpg";
+		console.log(images.item(i).src);
+	}
 }
