@@ -206,3 +206,4 @@ function valid = CheckDiagonal(point1, point2, image, width)
         xPixel = xPixel + xDir;
     end
 end
+
