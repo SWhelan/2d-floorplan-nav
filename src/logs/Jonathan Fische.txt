@@ -36,3 +36,19 @@ The bounding boxes will be fixed by adding more images to the training that I wi
 	Getting to this point took me some time, but now that I understand how this method works, I can manipulate it better.
 Uploaded are the xml file of ElevatorDetector which is the trained file that is used in the m file. In the m file you can change the image file to see how  
 	the different images are effected by the Cascade Object Detector.
+
+For the week of 10/28
+Even with the break, work was slow this week, as I got sick over the fall break
+I am as close as I seem I can be with the elevator detector, will tweek it a little bit maybe as only one image I noticed is not detecting an elevator.
+	We decided that even if we could not get the whole elevator in the bounding box, it would be fine as if we removed it, we could add a node there
+	that would not be blocked by the elevators lines.
+Started with the removing the elevator. This took some time as I was confused as how the bounding boxes were saved after the detection. I learned that its
+ 	a M-by-4 matrix where each row contains a vector in the format [x y width height], where x and y correspond to the upper left corner of the 
+	bounding box, with M being how many bounding boxes there are. From this information, I would go through each bounding boxand find the center by 
+	getting the half of the width and height and adding them to the x and y. From there my plan would have been to go up pixel by pixel until it 
+	found a red pixel and would recursively remove the red pixels. I however ran into problems and am going to ask Michael for help next week.
+I showed how the stair detection are progressing to the others, I told them that stairs would be difficult either way as most of the stairs are unique 
+	and how the detector works is that it would require every type of stair possible with rotation affecting it too, and even then it might cause 
+	problems as catching the net too wide would cause small things to be classified as stairs, but they were fine with how messy it could be with 
+	mulitple bounding boxes, they said it would be fine, but we agreed that I should stop focusing on the stairs for now as it might need more than 
+	just a few tweeks. For now, I'm sending the stair detector into the repository as its in its best shape currently.
