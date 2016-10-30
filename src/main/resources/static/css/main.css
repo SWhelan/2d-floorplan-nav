@@ -22,7 +22,6 @@ body {
 .point {
     width: 26px;
     height: 26px;
-    background: #33C3F0; // From skeleton.css to match theme.
     -moz-border-radius: 13px;
     -webkit-border-radius: 13px;
     border-radius: 13px;
