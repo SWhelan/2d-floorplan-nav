@@ -1,21 +1,58 @@
 var pointA = null;
 var pointB = null;
+var excludePoints = [];
 var currWindowWidth = null;
 var currWindowHeight = null;
 var prevWindowWidth = null;
 var prevWindowHeight = null;
+var leftMouseDown = false;
 
 document.addEventListener("DOMContentLoaded", function() {
-	var floors = getFloors();
-	for (var i = 0; i < floors.length; i++) {
-		floors[i].onclick = function(event) {
-			addPoint(event);
-		}
-	}
-	
+	addClickHandlersForPicking();	
 	window.onresize = handleResize;
 	updateWindowSize();
 });
+
+function addClickHandlersForPicking() {
+	setClickHandlersOnFloors(function(event) {
+		addPoint(event);
+	});
+}
+
+function removeClickHandlersForPicking() {
+	setClickHandlersOnFloors(null);
+}
+
+function addClickHandlersForExcluding() {	
+	setClickHandlersOnFloors(function(event) {
+		paint(event);
+	});
+	var floors = getFloors();
+	for (var i = 0; i < floors.length; i++) {
+		floors[i].onmousemove = function(event) {
+			if(leftMouseDown) {
+				paint(event);
+			}
+		}
+	}
+}
+
+function removeClickHandlersForExcluding() {
+	setClickHandlersOnFloors(null);
+}
+
+function setClickHandlersOnFloors(onClickFunction) {
+	var floors = getFloors();
+	for (var i = 0; i < floors.length; i++) {
+		floors[i].onclick = onClickFunction;
+	}
+}
+
+function paint(event) {
+	console.log("adding point");
+	var point = getClickInformation(event);
+	excludePoints.push(point);
+}
 
 function addPoint(event) {
 	if(pointB != null) {
@@ -26,11 +63,9 @@ function addPoint(event) {
 	if (pointA == null) {
 		pointA = point;
 		displayClick(event);
-	} else {
+	} else if(pointB == null) {
 		pointB = point;
 		displayClick(event);
-		displayLoadingScreen();
-		sendData(pointA, pointB);
 	}
 }
 
@@ -132,4 +167,29 @@ function swapImages() {
 		images.item(i).src = current.substring(0, current.length - 4) + "_path.jpg";
 		console.log(images.item(i).src);
 	}
+}
+
+function submitData() {
+	displayLoadingScreen();
+	sendData(pointA, pointB);
+	console.log("submitting");
+}
+
+function pickPointsMode() {
+	removeClickHandlersForExcluding();
+	addClickHandlersForPicking();
+	changeCursor("pointer");
+	console.log("picking");
+}
+
+function excludePointsMode() {
+	removeClickHandlersForPicking();
+	addClickHandlersForExcluding();
+	changeCursor("url('images/paintingcursor.png'), default");
+	console.log("excluding");
+}
+
+function changeCursor(value) {
+	document.body.style.cursor = value;
+	console.log("changed");
 }

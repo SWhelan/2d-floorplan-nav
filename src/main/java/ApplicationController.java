@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import containers.Directions;
 import containers.Directions.Coordinate;
+import containers.MustacheListItem;
 import service.MatlabService;
 import service.UploadFileService;
 import service.Util;
@@ -37,7 +38,7 @@ public class ApplicationController {
 	public static ModelAndView uploadImageOrdering(Request rq, Response rs) {
 		String[] filenames = rq.queryParamsValues(FILENAMES_KEY);
 		Map<String, Object> attributes = new HashMap<>();
-		attributes.put("filenames", filenames);
+		attributes.put("filenames", MustacheListItem.makeList(Arrays.asList(filenames)));
 		attributes.put("route", UploadFileService.DEFAULT_IMAGE_LOCATION);
 		rs.cookie("filenames", getFileNamesString(filenames));
 		return new ModelAndView(attributes, ROUTE_TEMPLATE);

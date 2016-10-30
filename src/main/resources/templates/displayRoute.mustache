@@ -1,12 +1,22 @@
 {{> header}}
-<h1>Click two points on the map for directions between them.</h1>
 <div class="row">
-    <div class="column">
-        {{#filenames}}
-        <img class="floor" src="{{route}}{{.}}">
-        {{/filenames}}
-    </div>
+    <h1>Click two points on the map for directions between them.</h1>
+    <button onclick="pickPointsMode()" class="selected-button">Pick Points</button>
+    <button onclick="excludePointsMode()">Exclude Points</button>
+    <button onclick="submitData()" class="button-primary">Submit</button>
 </div>
+{{#filenames}}
+    {{#evenIndex}}
+    <div class="row">
+    {{/evenIndex}}
+        <div class="one-half column">
+            <img class="floor" src="{{route}}{{string}}" />
+            <p>{{string}}</p>
+        </div>
+    {{^evenIndex}}
+    </div>
+    {{/evenIndex}}
+{{/filenames}}
 <div id="point-holder"></div>
 <div id="steps-holder"></div>
 <script type="text/javascript" src="js/route.js"></script>
