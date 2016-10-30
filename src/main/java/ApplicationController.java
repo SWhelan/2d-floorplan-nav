@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -51,20 +52,16 @@ public class ApplicationController {
 			JsonNode node = mapper.readValue(rawJSON, JsonNode.class);
 			JsonNode pointA = node.get("pointA");
 			JsonNode pointB = node.get("pointB");
+			JsonNode exclude = node.get("excludeList");
+			
 			Directions directions = new Directions();
 			directions.setOriginalFileNames(getFileNames(rq.cookie("filenames")));
 			
-			directions.setFileA(getFileNameOnly(pointA.get("filename").asText()));
-			directions.setA(new Coordinate(
-					Util.getJavaIndex(directions.getFileA(), directions.getOriginalFileNames()),
-					pointA.get("xcoord").asInt(),
-					pointA.get("ycoord").asInt()));
-			
-			directions.setFileB(getFileNameOnly(pointB.get("filename").asText()));
-			directions.setB(new Coordinate(
-					Util.getJavaIndex(directions.getFileB(), directions.getOriginalFileNames()),
-					pointB.get("xcoord").asInt(),
-					pointB.get("ycoord").asInt()));
+			List<Coordinate> exludePoints = new ArrayList<>();
+			exclude.elements().forEachRemaining(e -> exludePoints.add(makeCoord(e, directions.getOriginalFileNames())));
+			directions.setExludePoints(exludePoints);
+			directions.setA(makeCoord(pointA, directions.getOriginalFileNames()), getFileNameOnly(pointA.get("filename").asText()));
+			directions.setB(makeCoord(pointB, directions.getOriginalFileNames()), getFileNameOnly(pointB.get("filename").asText()));
 			
 			MatlabService.getRoute(directions);
 			directions.preprocessForResponse();
@@ -73,6 +70,14 @@ public class ApplicationController {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	private static Coordinate makeCoord(JsonNode node, List<String> possibleFileNames) {
+		return new Coordinate(
+				Util.getJavaIndex(getFileNameOnly(node.get("filename").asText()), possibleFileNames),
+				node.get("xcoord").asInt(),
+				node.get("ycoord").asInt()
+				);		
 	}
 
 	private static List<String> getFileNames(String filenames) {

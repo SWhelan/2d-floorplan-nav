@@ -20,7 +20,6 @@ function pickPointsMode() {
 	removeClickHandlersForExcluding();
 	addClickHandlersForPicking();
 	changeCursor("pointer");
-	console.log("picking");
 }
 
 function excludePointsMode() {
@@ -31,7 +30,15 @@ function excludePointsMode() {
 
 function submitData() {
 	displayLoadingScreen();
-	sendData(pointA, pointB);
+	sendData();
+}
+
+function handleResponse(data) {
+	hideLoadingScreen();
+	var response = JSON.parse(data.currentTarget.response);
+	var steps = response.prettySteps;
+	displaySteps(steps);
+	swapImages();
 }
 
 function addClickHandlersForPicking() {
@@ -100,11 +107,13 @@ function displayClick(event, color) {
 }
 
 function displayLoadingScreen() {
-	
+	element("loading-screen").style.display = "block";
+	element("loading-text").style.display = "block";
 }
 
 function hideLoadingScreen() {
-	
+	element("loading-screen").style.display = "none";
+	element("loading-text").style.display = "none";
 }
 
 function handleResize() {
@@ -147,11 +156,10 @@ function swapImages() {
 	for(var i = 0; i < images.length; i++) {
 		var current = images.item(i).src;	
 		images.item(i).src = current.substring(0, current.length - 4) + "_path.jpg";
-		console.log(images.item(i).src);
 	}
 }
 
-function sendData(pointA, pointB) {
+function sendData() {
 	// https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/send
 	
 	var xhr = new XMLHttpRequest();
@@ -159,14 +167,10 @@ function sendData(pointA, pointB) {
 	xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
 	xhr.onload = function (data) {
-		hideLoadingScreen();
-		var response = JSON.parse(data.currentTarget.response);
-		var steps = response.prettySteps;
-		displaySteps(steps);
-		swapImages();
+		handleResponse(data);
 	};
 	
-	var data = JSON.stringify({pointA: pointA, pointB: pointB});
+	var data = JSON.stringify({pointA: pointA, pointB: pointB, excludeList: excludePoints});
 	xhr.send(data);
 }
 

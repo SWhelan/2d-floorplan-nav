@@ -50,7 +50,8 @@ public class Directions {
 		return A;
 	}
 
-	public void setA(Coordinate a) {
+	public void setA(Coordinate a, String filename) {
+		fileB = filename;
 		A = a;
 	}
 
@@ -58,7 +59,8 @@ public class Directions {
 		return B;
 	}
 
-	public void setB(Coordinate b) {
+	public void setB(Coordinate b, String filename) {
+		fileB = filename;
 		B = b;
 	}
 
@@ -102,16 +104,8 @@ public class Directions {
 		return fileA;
 	}
 
-	public void setFileA(String fileA) {
-		this.fileA = fileA;
-	}
-
 	public String getFileB() {
 		return fileB;
-	}
-
-	public void setFileB(String fileB) {
-		this.fileB = fileB;
 	}
 	
 	public void preprocessForResponse() {

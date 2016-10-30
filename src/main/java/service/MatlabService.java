@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import containers.Directions;
+import containers.Directions.Coordinate;
 
 public class MatlabService {
 
 	private static final String FILENAMES_TXT_PATH = "src/matlab/filenames.txt";
+	private static final String EXCLUDE_POINTS_TXT_PATH = "src/matlab/exclude_points.txt";
 	private static final String PATH_TXT_PATH = "src/matlab/path.txt";
 	private static final String MATLAB_PATH = "\"E:\\matlab2016\\bin\\matlab.exe\"";
 	private static final String[] STANDARD_COMMAND = {MATLAB_PATH, "-nodisplay", "-nosplash", "-nodesktop", "-wait", "-r"};
@@ -17,6 +19,7 @@ public class MatlabService {
 	
 	public static void getRoute(Directions directions) {
 		makeFilenamesFile(directions.getOriginalFileNames());
+		makeExcludePointsFile(directions.getExludePoints());
 		String customRunCommand = generateRunCommand(
 				directions.getA().getX(), directions.getA().getY(), directions.getFileName(directions.getA().getIndex()), 
 				directions.getB().getX(), directions.getB().getY(), directions.getFileName(directions.getA().getIndex()), 
@@ -64,6 +67,23 @@ public class MatlabService {
 			builder.deleteCharAt(builder.length() - 1);
 		}
 		Util.writeFile(FILENAMES_TXT_PATH, builder.toString());
+	}
+	
+	private static void makeExcludePointsFile(List<Coordinate> excludePoints) {
+		StringBuilder builder = new StringBuilder();		
+		for (Coordinate point : excludePoints) {
+			builder
+			.append(point.index + 1) // Matlab indexing starts at 1
+			.append(",")
+			.append(Integer.toString(point.x))
+			.append(",")
+			.append(Integer.toString(point.y))			
+			.append("\n");
+		}
+		if(excludePoints.size() > 0) {
+			builder.deleteCharAt(builder.length() - 1);
+		}
+		Util.writeFile(EXCLUDE_POINTS_TXT_PATH, builder.toString());
 	}
 	
 	private static String executeCommand(String[] command){

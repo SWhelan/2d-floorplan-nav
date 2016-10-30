@@ -1,8 +1,8 @@
 {{> header}}
 <div class="row">
     <h1>Click two points on the map for directions between them.</h1>
-    <button onclick="pickPointsMode()" class="selected-button">Pick Points</button>
-    <button onclick="excludePointsMode()">Exclude Points</button>
+    <button id="pick-points-button" onclick="pickPointsMode()" class="selected-button">Pick Points</button>
+    <button id="exclude-points-button" onclick="excludePointsMode()">Exclude Points</button>
     <button onclick="submitData()" class="button-primary">Submit</button>
 </div>
 {{#filenames}}
@@ -19,5 +19,9 @@
 {{/filenames}}
 <div id="point-holder"></div>
 <div id="steps-holder"></div>
+</div> <!-- ends container in header -->
+<div id="loading-screen"></div>
+<div id="loading-text"><h2>Loading route please wait...</h2></div>
 <script type="text/javascript" src="js/route.js"></script>
+<div class="container"> <!-- matches closing div in footer -->
 {{> footer}}
