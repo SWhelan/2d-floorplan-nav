@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -63,6 +65,8 @@ public class ApplicationController {
 			directions.setA(makeCoord(pointA, directions.getOriginalFileNames()), getFileNameOnly(pointA.get("filename").asText()));
 			directions.setB(makeCoord(pointB, directions.getOriginalFileNames()), getFileNameOnly(pointB.get("filename").asText()));
 			
+			deleteOldPathImages(directions.getOriginalFileNames());
+			
 			MatlabService.getRoute(directions);
 			directions.preprocessForResponse();
 			return directions;
@@ -72,6 +76,24 @@ public class ApplicationController {
 		}
 	}
 	
+	private static void deleteOldPathImages(List<String> originalFileNames) {
+		originalFileNames.stream()
+		.map(e -> getFileNameOnly(e))
+		.forEach(filename -> {
+			String pathFileName = getPathImageFileName(filename);
+			try {
+				Files.deleteIfExists(Paths.get(UploadFileService.DEFAULT_MULTIPART_WRITE_LOCATION + pathFileName));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+	}
+
+	private static String getPathImageFileName(String filename) {
+		String base = filename.substring(0, filename.lastIndexOf("."));
+		return base + "_path.jpg";
+	}
+
 	private static Coordinate makeCoord(JsonNode node, List<String> possibleFileNames) {
 		return new Coordinate(
 				Util.getJavaIndex(getFileNameOnly(node.get("filename").asText()), possibleFileNames),

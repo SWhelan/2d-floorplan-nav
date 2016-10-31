@@ -1,18 +1,19 @@
 function DotGrid(x1, y1, z1, x2, y2, z2)
     InitClasspath();
-    filenames = GetFilenames();
-    file = filenames{1};
+    files = GetFilenames();
+    file = files{1};
     width = 36;
     show = 0;
     image = imread(file);
     x = [x1 x2];
     y = [y1 y2];
+    z = [z1 z2];
     x = round(x/width);
     y = round(y/width);
-    adjacencyMatrix = FindConnections(file, width, show);
+    adjacencyMatrix = ConnectBuilding(files, width, show);
     aStarAgent = javaObjectEDT('Pathfinding.AStar');
-    path = javaMethod('AStarSearch', aStarAgent, [x(1) y(1)], [x(2) y(2)], adjacencyMatrix);
-    SavePath(file, image, width, path, show);
+    path = javaMethod('aStarSearch', aStarAgent, [x(1) y(1) z(1)]-1, [x(2) y(2) z(2)]-1, adjacencyMatrix);
+    SavePath(files, width, path, show);
     formatSpec = '%u,%u\n';
     writeFile = fopen('path.txt', 'w');
     fprintf(writeFile, formatSpec, transpose(path));

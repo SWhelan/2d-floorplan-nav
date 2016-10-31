@@ -14,17 +14,20 @@ function initPage() {
 	addClickHandlersForPicking();	
 	window.onresize = handleResize;
 	saveWindowSize();
+	selectPickPointsButton();
 }
 
 function pickPointsMode() {
 	removeClickHandlersForExcluding();
 	addClickHandlersForPicking();
+	selectPickPointsButton();
 	changeCursor("pointer");
 }
 
 function excludePointsMode() {
 	removeClickHandlersForPicking();
 	addClickHandlersForExcluding();
+	selectExcludePointsButton();
 	changeCursor("url('images/paintingcursor.ico'), pointer");
 }
 
@@ -76,6 +79,24 @@ function setClickHandlersOnFloors(onClickFunction) {
 	}
 }
 
+function selectExcludePointsButton() {
+	greyButton("exclude");
+	whiteButton("pick");
+}
+
+function selectPickPointsButton() {
+	greyButton("pick");
+	whiteButton("exclude");
+}
+
+function greyButton(value) {
+	element(value + "-points-button").style.background = "lightgrey";
+}
+
+function whiteButton(value) {
+	element(value + "-points-button").style.background = "white";
+}
+
 function addPoint(event) {
 	var color = "#33C3F0"; // From skeleton.css to match theme.
 	if(pointB != null) {
@@ -94,8 +115,10 @@ function addPoint(event) {
 
 function excludePoint(event) {
 	var point = getClickInformation(event);
-	excludePoints.push(point);
-	displayClick(event, "red");
+	if (point.xcoord > 0) {
+		excludePoints.push(point);
+		displayClick(event, "red");
+	}
 }
 
 function displayClick(event, color) {
@@ -130,8 +153,6 @@ function movePoint(point) {
 	}
 	var newTop = parseInt(point.style.top.substring(0, point.style.top.length - 2)) + ((currWindowHeight - prevWindowHeight)/2) + "px";
 	var newLeft = parseInt(point.style.left.substring(0, point.style.left.length - 2)) + ((currWindowWidth - prevWindowWidth)/2) + "px";
-	console.log(newTop);
-	console.log(newLeft);
 	point.style.top = newTop;
 	point.style.left = newLeft;
 }
@@ -144,8 +165,8 @@ function saveWindowSize() {
 }
 
 function displaySteps(steps) {
-	console.log(steps);
 	var holder = element("steps-holder");
+	holder.innerHTML == "";
 	for(var i = 0; i < steps.length; i++) {
 		holder.innerHTML += "<div class='step'>" + steps[i] + "</div>";
 	}
@@ -154,22 +175,19 @@ function displaySteps(steps) {
 function swapImages() {
 	var images = document.getElementsByClassName("floor");
 	for(var i = 0; i < images.length; i++) {
-		var current = images.item(i).src;	
-		images.item(i).src = current.substring(0, current.length - 4) + "_path.jpg";
+		var original = images.item(i).dataset.original;
+		images.item(i).src = original.substring(0, original.length - 4) + "_path.jpg";
 	}
 }
 
 function sendData() {
 	// https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/send
-	
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', '/uploadPoints', true);
 	xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-
-	xhr.onload = function (data) {
-		handleResponse(data);
+	xhr.onload = function (response) {
+		handleResponse(response);
 	};
-	
 	var data = JSON.stringify({pointA: pointA, pointB: pointB, excludeList: excludePoints});
 	xhr.send(data);
 }

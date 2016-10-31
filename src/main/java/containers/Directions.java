@@ -2,7 +2,6 @@ package containers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Directions {
 	
@@ -113,10 +112,17 @@ public class Directions {
 	}
 	
 	private List<Coordinate> generateCoords() {
-		return this.steps.stream()
+		List<Coordinate> temp = new ArrayList<>(); 
+				this.steps.stream()
 				.map(string -> string.split(","))
-				.map(array -> new Coordinate(0, Integer.parseInt(array[0]), Integer.parseInt(array[1])))
-				.collect(Collectors.toList());
+				.forEach(array -> {
+					try {
+						temp.add(new Coordinate(0, Integer.parseInt(array[0]), Integer.parseInt(array[1])));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				});
+		return temp;
 	}
 	
 	private void generatePrettySteps(List<Coordinate> coords) {
