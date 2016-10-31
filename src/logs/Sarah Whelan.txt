@@ -76,3 +76,24 @@ is scheduled for that next week as well so we might be better off if we do that 
 around the same time.
 
 Screenshots in folder for week 5.
+
+Week 6 10/29 - 11/4
+
+Added an interface for choosing points to ignore/not go to on the path. Added buttons
+to toggle between choosing the two endpoints and choosing points that should be ignored.
+Added a submit button to allow for both steps before path is found. Changed the way the
+images are displayed in that they are slightly smaller and next to each other versus
+all of them being full width. Added a loading screen because matlab takes almost a minute
+to load for me (the actually code we wrote is like maybe a second but loading matlab 
+takes a long time - I think it is because my matlab is installed on an SD card). Added
+code to handle collecting and displaying the points that should be avoided on the screen
+in red. Save the list of points that should be ignored to a file so matlab can access them.
+I think Jonathan is doing the re-run without these points thing so I wanted this to be in
+before then. Also deletes the old _path.jpg images which is how we are displaying the path
+over the images (for now the images are being generated and saved out via matlab). I think
+there is still a little bit to be done for choosing which/finding the right image to display
+(complicated by re-running the path finding in that we have to remember the original filename).
+Re-organized routes.js which handles the swapping out of everything after the ajax request.
+
+Screenshots in folder for week 6. 
+
