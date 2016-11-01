@@ -12,9 +12,9 @@ public class MatlabService {
 
 	private static final String FILENAMES_TXT_PATH = "src/matlab/filenames.txt";
 	private static final String EXCLUDE_POINTS_TXT_PATH = "src/matlab/exclude_points.txt";
-	private static final String PATH_TXT_PATH = "src/matlab/path.txt";
-	private static final String MATLAB_PATH = "\"E:\\matlab2016\\bin\\matlab.exe\"";
-	private static final String[] STANDARD_COMMAND = {MATLAB_PATH, "-nodisplay", "-nosplash", "-nodesktop", "-wait", "-r"};
+	private static final String PATH_TXT_PATH = "src/matlab/path.txt";	
+	private static final String MATLAB_CONFIG_PATH = "src/matlab/matlabinstallpath.txt";
+	private static final String[] STANDARD_COMMAND = {"-nodisplay", "-nosplash", "-nodesktop", "-wait", "-r"};
 	private static final String SCRIPT_PATH = "src\\matlab\\DotGrid";
 	
 	public static void getRoute(Directions directions) {
@@ -24,9 +24,10 @@ public class MatlabService {
 				directions.getA().getX(), directions.getA().getY(), directions.getFileName(directions.getA().getIndex()), 
 				directions.getB().getX(), directions.getB().getY(), directions.getFileName(directions.getA().getIndex()), 
 				directions.getOriginalFileNames());
-		String[] command = new String[STANDARD_COMMAND.length + 1];
+		String[] command = new String[STANDARD_COMMAND.length + 2];
+		command[0] = getMatlabLocation();
 		for (int i = 0; i < STANDARD_COMMAND.length; i++) {
-			command[i] = STANDARD_COMMAND[i];
+			command[i + 1] = STANDARD_COMMAND[i];
 		}
 		command[command.length - 1] = customRunCommand;
 		executeCommand(command);
@@ -106,6 +107,14 @@ public class MatlabService {
 			e.printStackTrace();
 			return "";
 		}
+	}
+	
+	private static String getMatlabLocation() {
+		List<String> data = Util.readFile(MATLAB_CONFIG_PATH);
+		if (data.isEmpty()) {
+			return "";
+		}
+		return data.get(0);
 	}
 
 }

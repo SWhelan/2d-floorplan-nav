@@ -6,6 +6,7 @@ codecoverage/*
 /target/
 src/main/resources/static/tmp/*
 src/matlab/javaclasspath.txt
+src/matlab/matlabinstallpath.txt
 src/matlab/path.txt
 src/matlab/filenames.txt
 src/matlab/exclude_points.txt
