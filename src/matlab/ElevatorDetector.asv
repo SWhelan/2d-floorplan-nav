@@ -1,12 +1,11 @@
 function ElevatorDetector
     detector = vision.CascadeObjectDetector('ElevatorDetector.xml');
-    img = imread('Glennan/Glennan2.jpg');   
+    img = imread('Glennan2.jpg');   
     display=img;
     bbox = step(detector,img);
-    %this is for the elevator removal. Recomended to see what happens with
-    %just one elevator is comment out the loop and replace the 'i's with 1
+    %this is for the elevator removal
     for i=1:size(bbox,1)
-        centerx = bbox(i,1)+bbox(i,3)/2;  
+        centerx = bbox(i,1)+bbox(i,3)/2; %recomendation is 
         centery = bbox(i,2)+bbox(i,4)/2;
         finder = RedRemover(centery,centerx,display); 
 % I realize now that because it loops the finder will be replaced with the 

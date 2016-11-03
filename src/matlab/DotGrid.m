@@ -21,12 +21,9 @@ function DotGrid(x1, y1, z1, x2, y2, z2)
     exit;
 end
 
-function InitClasspath ()
-    classpathData = ReadFile('javaclasspath.txt');
-    javaaddpath(classpathData{1});
-end
 
-function path = DotGrid2 (files, width, show)
+function DotGrid (files, width, show)
+    InitClasspath();
     x = [];
     y = [];
     z = [];
@@ -52,6 +49,11 @@ function path = DotGrid2 (files, width, show)
     writeFile = fopen('path.txt', 'w');
     fprintf(writeFile, formatSpec, transpose(path));
     fclose(writeFile);
+end
+
+function InitClasspath ()
+    classpathData = ReadFile('javaclasspath.txt');
+    javaaddpath(classpathData{1});
 end
 
 function filenames = GetFilenames()
