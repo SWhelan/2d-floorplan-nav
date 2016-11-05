@@ -46,7 +46,19 @@ function path = DotGrid2 (files, width, show)
     %transform pixel locations into dot coordinates
     x = round(x/width);
     y = round(y/width);
-    adjacencyMatrix = ConnectBuilding(files, width, show);
+    %remove user selected nodes from the map
+    noNodes= load('NoNodes.txt');
+    noNodesImg = cell(size(files,1),size(files,2));
+    if isempty(noNodes)== 0
+        for i=1:size(files,2)
+            noNodesImg{i} = RemoveNodes(noNodes,i,files{i});
+        end
+    else
+        for i=1:size(files,2)
+            noNodesImg{i} = imread(files{i});
+        end
+    end
+    adjacencyMatrix = ConnectBuilding(noNodesImg, width, show);
     aStarAgent = javaObjectEDT('Pathfinding.AStar');
     %find path between first two selected points
     path = javaMethod('aStarSearch', aStarAgent, [x(1) y(1) z(1)]-1, [x(2) y(2) z(2)]-1, adjacencyMatrix)
@@ -121,24 +133,24 @@ function SavePath(files, width, path, shows)
 end
 
 %Generates an AdjacencyMatrix representing an entire building
-%Parameters: a cell array of files for the building floors, the width to
+%Parameters: a cell array of images of the building floors, the width to
     %use when processing the images, a logical to show the connections it finds
 %Returns: the AdjacencyMatrix java object
-function adjacencyMatrix = ConnectBuilding (files, width, show)
-    floors = size(files, 2);
+function adjacencyMatrix = ConnectBuilding (images, width, show)
+    floors = size(images, 2);
     adjacencyMatrix = javaObjectEDT('Pathfinding.AdjacencyMatrix', floors);
     for f=1:floors
-        ConnectFloor(files{f}, width, f, adjacencyMatrix, show);
+        ConnectFloor(images{f}, width, f, adjacencyMatrix, show);
     end
 end
 
 %Finds the connections on a specific floor and stores them in an
     %AdjacencyMatrix java object
-%Parameters: the file for the floor, the width to process the image width,
+%Parameters: the image of the floor, the width to process the image width,
     %the floor index, the AdjacencyMatrix to store the connections in, a
     %logical to display the connecitons it finds
-function ConnectFloor (file, width, f, adjacencyMatrix, show)
-    image = imread(file);
+function ConnectFloor (image, width, f, adjacencyMatrix, show)
+    %image = imread(file); 
     if show
         display = image;
     end
@@ -213,7 +225,7 @@ function ConnectFloor (file, width, f, adjacencyMatrix, show)
     if show
         figure;
         imshow(display);
-        title(file);
+        %title(file);
     end
 end
 
@@ -236,3 +248,16 @@ function valid = CheckDiagonal(point1, point2, image, width)
     end
 end
 
+%Paints over places from a text document so that no nodes will be created
+    %in those areas.
+%Parameters: a data matrix that has the floor number and xy coordinates,
+    %which floor we are currently on, and the image
+%Returns: The image now with dots on it.
+function files = RemoveNodes(remove, floor, img)
+    files=imread(img);
+    for i=1:size(remove,1)
+        if remove(i,1) == floor
+            files(remove(i,3)-10:remove(i,3)+10,remove(i,2)-10:remove(i,2)+10,:) = 0;
+        end
+    end
+end

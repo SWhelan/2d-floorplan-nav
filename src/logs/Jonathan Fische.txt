@@ -52,3 +52,18 @@ I showed how the stair detection are progressing to the others, I told them that
 	problems as catching the net too wide would cause small things to be classified as stairs, but they were fine with how messy it could be with 
 	mulitple bounding boxes, they said it would be fine, but we agreed that I should stop focusing on the stairs for now as it might need more than 
 	just a few tweeks. For now, I'm sending the stair detector into the repository as its in its best shape currently.
+	
+For the week of 11/4
+Started out the week working on the elevator detector but after me not finding a solution with how I was approaching it at the time, however, thanks to
+	the help of Sarah and Michael, they seemed to have found a solution. I was planning to meet with them to discuss the problem, but the day of the meeting
+	I was delayed and ended up not being able to meet with them that day, but luckily they did not seem to need my help in figuring out the solution.
+For the rest of the week I was working on node removal. I was told by Sarah to use a text doc that would contain the coordinates that the users would input
+	from the site so I made a doc with those parameters as well as a blank doc, so that if the user ended up not inputing any blocked passageways, I could test
+	it with that. I then realized that I would have to find a way to parse through all the files in a way that would not interfere with the rest of DotGrid. I
+	first tried to have the files variable equal whatever came out of RemoveNodes, but RemoveNodes makes the files into images so I had to change a few things
+	around in the rest of the method. I first created a cell with equal size to the array of files, so that I could have the images go into that cell and have 
+	them be processed through ConnectBuildings, getting rid of lines that would read the file's image, like in line 153. I didnt not change the SavePath
+	function as it needed the adjacencymatix and not the acutal images coming out of ConnectFloors, which were the same images used in RemoveNodes. 
+In the end it all worked out for RemoveNodes. I did not put it in the first DotGrid function as that is for the web version and I was not confident in
+	correctly placing the function in the right place. If you want to run it yourself, comment out the first DotGrid and use DotGrid2. In my test images in the
+	screenshot folder I used the parameters DotGrid({'NoDoors.png'},50,1).
