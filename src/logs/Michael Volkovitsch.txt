@@ -92,5 +92,32 @@ Week 5: 10/22-10/28
 					find a path between point1 on floor 1 and point2 on floor 3
 						compute p1->A, p1->B, A->C, A->D, B->C, B->D, C->point2, D->point2 and find the shortest path you can make with those
 			Performance has been much better than expected, so we may be able to just search the entire space with a heuristic that takes floors into account
-				
-		
+			
+Week 6: 10/29-11/4D
+
+	Slow week
+	Was hoping to get the floor traversal to cross floors this week but Jonathan was having difficulties removing the elevators from the images
+	While Jonathan was doing other things Sarah and I took a look at the code he was having trouble getting to work and I tried to fix it
+		Problem:
+			The elevator detector can find the elevators but the bounding boxes aren't accurate enough to remove the elevators by just painting the inside of the boxes
+		Original code/approach:
+			start in the center of the bounding box and head up until we find ourseleves in the colored pixels representing the elevator
+			recursively paint the pixels white (the elevator symbol is self contained)
+		New code/approach:
+			The old code wasn't working and while Sarah and I couldn''t pin down why, we felt it might be the specific matlab functions and operations
+				Rewrote the code using more basic operations and methods which then worked
+					This code was abysmally slow (order of 10s of seconds to remove elevators) and some of our images were large enough we ran out of memory recursing
+			I came up with and coded a simpler approach which is faster and doesn't eat up memory
+				Start in middle of bounding box and find a red pixel as before
+				navigate to the top left corner of the elevator symbol (a box with an x in it)
+					head as far right and up as possible, then head as far left and up as possible to get to the top left from any initial point in the symbol
+				navigate to the bottom right corner by heading straight down then straight right
+				paint the box given by the corners we found white
+			runs in tenths of seconds rather than 10s and doesn't kill the stack
+			implmentation problems:
+				noise in the image made navigating the symbol a little difficult (we'd get stuck in the noise)
+					fixed with some minor thresholding
+				the corners aren't exactly square (there's one pixel rounding the very corner)
+					fixed by painting one pixel wider than the box we find
+				this approach won't work for elevators oriented at anything other than 90 degrees because it's a lot harder to navigate to the corner
+					this will still work with all of our test images for the Case buildings, may try to come up with something more robust if we have time but works for now

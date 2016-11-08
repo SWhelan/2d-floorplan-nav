@@ -21,12 +21,16 @@ function DotGrid(x1, y1, z1, x2, y2, z2)
     exit;
 end
 
-
-function DotGrid (files, width, show)
+%Entry level method for testing ptahfinding directly from matlab
+%Parameters: a cell array of file names, a spacing in pixels gor the dot grid, and a
+    %logical to show results as it runs
+%Returns: the path in (x,y,z) coordinates
+function path = DotGrid2 (files, width, show)
     InitClasspath();
     x = [];
     y = [];
     z = [];
+    %loop through each file letting user select points
     for i=1:size(files,2)
         image = imread(files{i});
         imshow(image);
@@ -39,10 +43,24 @@ function DotGrid (files, width, show)
         end
     end
     close all;
+    %transform pixel locations into dot coordinates
     x = round(x/width);
     y = round(y/width);
-    adjacencyMatrix = ConnectBuilding(files, width, show);
+    %remove user selected nodes from the map
+    noNodes= load('NoNodes.txt');
+    noNodesImg = cell(size(files,1),size(files,2));
+    if isempty(noNodes)== 0
+        for i=1:size(files,2)
+            noNodesImg{i} = RemoveNodes(noNodes,i,files{i});
+        end
+    else
+        for i=1:size(files,2)
+            noNodesImg{i} = imread(files{i});
+        end
+    end
+    adjacencyMatrix = ConnectBuilding(noNodesImg, width, show);
     aStarAgent = javaObjectEDT('Pathfinding.AStar');
+    %find path between first two selected points
     path = javaMethod('aStarSearch', aStarAgent, [x(1) y(1) z(1)]-1, [x(2) y(2) z(2)]-1, adjacencyMatrix)
     SavePath(files, width, path, show);
     formatSpec = '(%u, %u), ';
@@ -71,11 +89,18 @@ function data = ReadFile(filename)
     fclose(fileId);
 end
 
+%Saves the found path out as images
+%Parameters: cell array of original file names, width used in the
+    %pathfinding, the found path, a logical if it should display the saved
+    %images
 function SavePath(files, width, path, shows)
+    %get images to draw path on
     images = cell(size(files, 2), 1);
     for i=1:size(files,2)
         images{i} = imread(files{1});
     end
+    %for each pair of points in the path, draw between them if they're on
+    %the same image
     for i=1:size(path,1)-1
         p1 = path(i,:);
         p2 = path(i+1,:);
@@ -95,6 +120,7 @@ function SavePath(files, width, path, shows)
             end
         end
     end
+    %save out the images with altered names
     for i=1:size(files,2)
        filename = [files{i}(1:size(files{i}, 2)-4) '_path.jpg'];
        imwrite(images{i}, filename);
@@ -106,17 +132,25 @@ function SavePath(files, width, path, shows)
     end
 end
 
-function adjacencyMatrix = ConnectBuilding (files, width, show)
-    floors = size(files, 2);
+%Generates an AdjacencyMatrix representing an entire building
+%Parameters: a cell array of images of the building floors, the width to
+    %use when processing the images, a logical to show the connections it finds
+%Returns: the AdjacencyMatrix java object
+function adjacencyMatrix = ConnectBuilding (images, width, show)
+    floors = size(images, 2);
     adjacencyMatrix = javaObjectEDT('Pathfinding.AdjacencyMatrix', floors);
     for f=1:floors
-        ConnectFloor(files{f}, width, f, adjacencyMatrix, show);
+        ConnectFloor(images{f}, width, f, adjacencyMatrix, show);
     end
 end
 
-%read the image pointed to by file with a dot spacing of width
-function ConnectFloor (file, width, f, adjacencyMatrix, show)
-    image = imread(file);
+%Finds the connections on a specific floor and stores them in an
+    %AdjacencyMatrix java object
+%Parameters: the image of the floor, the width to process the image width,
+    %the floor index, the AdjacencyMatrix to store the connections in, a
+    %logical to display the connecitons it finds
+function ConnectFloor (image, width, f, adjacencyMatrix, show)
+    %image = imread(file); 
     if show
         display = image;
     end
@@ -130,8 +164,8 @@ function ConnectFloor (file, width, f, adjacencyMatrix, show)
           xPixel = x*width;
           yPixel = y*width;
           if image(yPixel,xPixel,:) == 255
-              %color the dot black
               if show
+                 %color the dot black
                 display(yPixel,xPixel,:) = 0;
               end
               %Check east, southeast, south, southwest points
@@ -191,10 +225,14 @@ function ConnectFloor (file, width, f, adjacencyMatrix, show)
     if show
         figure;
         imshow(display);
-        title(file);
+        %title(file);
     end
 end
 
+%Checks if the line between two pixels is all white or not
+%Parameters: the first point [r,c], the second point [r,c], the image, the
+    %width used in processing
+%Returns: true if pixles between them are all white, false otherwise
 function valid = CheckDiagonal(point1, point2, image, width)
     yDir = point2(1) - point1(1);
     yDir = yDir./abs(yDir);
@@ -210,3 +248,16 @@ function valid = CheckDiagonal(point1, point2, image, width)
     end
 end
 
+%Paints over places from a text document so that no nodes will be created
+    %in those areas.
+%Parameters: a data matrix that has the floor number and xy coordinates,
+    %which floor we are currently on, and the image
+%Returns: The image now with dots on it.
+function files = RemoveNodes(remove, floor, img)
+    files=imread(img);
+    for i=1:size(remove,1)
+        if remove(i,1) == floor
+            files(remove(i,3)-10:remove(i,3)+10,remove(i,2)-10:remove(i,2)+10,:) = 0;
+        end
+    end
+end
