@@ -149,8 +149,8 @@ end
 %Parameters: the image of the floor, the width to process the image width,
     %the floor index, the AdjacencyMatrix to store the connections in, a
     %logical to display the connecitons it finds
-function ConnectFloor (image, width, f, adjacencyMatrix, show)
-    %image = imread(file); 
+function ConnectFloor (file, width, f, adjacencyMatrix, show)
+    image = imread(file); 
     if show
         display = image;
     end
