@@ -10,7 +10,18 @@ function DotGrid(x1, y1, z1, x2, y2, z2)
     z = [z1 z2];
     x = round(x/width);
     y = round(y/width);
-    adjacencyMatrix = ConnectBuilding(files, width, show);
+    noNodes= load('NoNodes.txt');
+    noNodesImg = cell(size(files,1),size(files,2));
+    if isempty(noNodes)== 0
+        for i=1:size(files,2)
+            noNodesImg{i} = RemoveNodes(noNodes,i,files{i});
+        end
+    else
+        for i=1:size(files,2)
+            noNodesImg{i} = imread(files{i});
+        end
+    end
+    adjacencyMatrix = ConnectBuilding(noNodesImg, width, show);
     aStarAgent = javaObjectEDT('Pathfinding.AStar');
     path = javaMethod('aStarSearch', aStarAgent, [x(1) y(1) z(1)]-1, [x(2) y(2) z(2)]-1, adjacencyMatrix);
     SavePath(files, width, path, show);
@@ -79,6 +90,7 @@ function filenames = GetFilenames()
 end
 
 function data = ReadFile(filename)
+    disp(filename)
     fileId = fopen(filename, 'r');
     data = cell(0,1);
     line = fgetl(fileId);
@@ -149,8 +161,8 @@ end
 %Parameters: the image of the floor, the width to process the image width,
     %the floor index, the AdjacencyMatrix to store the connections in, a
     %logical to display the connecitons it finds
-function ConnectFloor (file, width, f, adjacencyMatrix, show)
-    image = imread(file); 
+function ConnectFloor (image, width, f, adjacencyMatrix, show)
+    %image = imread(file); 
     if show
         display = image;
     end

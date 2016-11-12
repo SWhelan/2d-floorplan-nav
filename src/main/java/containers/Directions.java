@@ -127,14 +127,42 @@ public class Directions {
 	
 	private void generatePrettySteps(List<Coordinate> coords) {
 		this.prettySteps = new ArrayList<>();
+		prettySteps.add("Assuming that north is up");
 		prettySteps.add("Start");
 		while(coords.size() > 1) {
-			prettySteps.add(generatePrettyStep(coords.remove(0), coords.remove(0)));
+			prettySteps.add(generatePrettyStep(coords.remove(0), coords.remove(0), coords.remove(0), coords.get(0)));
 		}
 		prettySteps.add("End");
 	}
 
-	private String generatePrettyStep(Coordinate coord1, Coordinate coord2) {
-		return "Go to " + coord2.getX() + "x and " + coord2.getY() + "y.";
+	private String generatePrettyStep(Coordinate coord1, Coordinate coord2, Coordinate coord3, Coordinate coord4) {
+		if(coord1.getX()>coord4.getX() && coord1.getY()==coord4.getY()){
+			return "Go east 1 unit";
+		}
+		if(coord1.getX()<coord4.getX() && coord1.getY()==coord4.getY()){
+			return "Go west 1 unit";
+		}
+		if(coord1.getX()==coord4.getX() && coord1.getY()>coord4.getY()){
+			return "Go north 1 unit";
+		}
+		if(coord1.getX()==coord4.getX() && coord1.getY()<coord4.getY()){
+			return "Go south 1 unit";
+		}
+		if(coord1.getX()>coord4.getX() && coord1.getY()<coord4.getY()){
+			return "Go southeast 1 unit";
+		}
+		if(coord1.getX()>coord4.getX() && coord1.getY()>coord4.getY()){
+			return "Go northeast 1 unit";
+		}
+		if(coord1.getX()<coord4.getX() && coord1.getY()<coord4.getY()){
+			return "Go southwest 1 unit";
+		}
+		if(coord1.getX()<coord4.getX() && coord1.getY()>coord4.getY()){
+			return "Go northwest 1 unit";
+		}
+		else{
+			return "mistakes were made";
+		}
+		//return "Go to " + coord1.getX() + "x and " + coord1.getY() + "y.";
 	}
 }
