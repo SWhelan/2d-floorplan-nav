@@ -13,12 +13,13 @@ function DotGrid(x1, y1, z1, x2, y2, z2)
     adjacencyMatrix = ConnectBuilding(files, width, show);
     aStarAgent = javaObjectEDT('Pathfinding.AStar');
     path = javaMethod('aStarSearch', aStarAgent, [x(1) y(1) z(1)]-1, [x(2) y(2) z(2)]-1, adjacencyMatrix);
+    disp(path)
     SavePath(files, width, path, show);
-    formatSpec = '%u,%u\n';
+    formatSpec = '%u,%u,%u\n';
     writeFile = fopen('path.txt', 'w');
     fprintf(writeFile, formatSpec, transpose(path));
     fclose(writeFile);
-    exit;
+    %exit;
 end
 
 %Entry level method for testing ptahfinding directly from matlab
@@ -63,7 +64,7 @@ function path = DotGrid2 (files, width, show)
     %find path between first two selected points
     path = javaMethod('aStarSearch', aStarAgent, [x(1) y(1) z(1)]-1, [x(2) y(2) z(2)]-1, adjacencyMatrix)
     SavePath(files, width, path, show);
-    formatSpec = '(%u, %u), ';
+    formatSpec = '%u,%u,%u\n';
     writeFile = fopen('path.txt', 'w');
     fprintf(writeFile, formatSpec, transpose(path));
     fclose(writeFile);

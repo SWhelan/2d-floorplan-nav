@@ -117,7 +117,7 @@ public class Directions {
 				.map(string -> string.split(","))
 				.forEach(array -> {
 					try {
-						temp.add(new Coordinate(0, Integer.parseInt(array[0]), Integer.parseInt(array[1])));
+						temp.add(new Coordinate(Integer.parseInt(array[2]), Integer.parseInt(array[0]), Integer.parseInt(array[1])));
 					} catch (Exception e) {
 						// The point was malformed this can happen for the last point printed by matlab
 						// is often only one number. If this happens just skip this coordinate.
