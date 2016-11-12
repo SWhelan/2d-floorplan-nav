@@ -29,6 +29,7 @@ public class ApplicationController {
 
 	public static ModelAndView renderHome(Request rq, Response rs) {
 		Map<String, Object> attributes = new HashMap<>();
+		rs.cookie("filenames", "");
 		return new ModelAndView(attributes, LANDNG_PAGE_TEMPLATE);
 	}
 

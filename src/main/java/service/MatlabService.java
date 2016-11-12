@@ -39,8 +39,8 @@ public class MatlabService {
 				.stream()
 				.map(filename -> {
 					String possibleNew = Util.removeFileExtension(filename) + "_path.jpg";
-					File file = new File(possibleNew);
-					return file.exists() ? possibleNew : filename;
+					File file = new File(UploadFileService.DEFAULT_MULTIPART_WRITE_LOCATION + possibleNew);
+					return UploadFileService.DEFAULT_IMAGE_LOCATION + (file.exists() ? possibleNew : filename);
 				}).collect(Collectors.toList());
 		directions.setAfterPathFileNames(afterPathFileNames);
 	}

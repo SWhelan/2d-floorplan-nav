@@ -119,7 +119,10 @@ public class Directions {
 					try {
 						temp.add(new Coordinate(0, Integer.parseInt(array[0]), Integer.parseInt(array[1])));
 					} catch (Exception e) {
-						e.printStackTrace();
+						// The point was malformed this can happen for the last point printed by matlab
+						// is often only one number. If this happens just skip this coordinate.
+						// The correct thing will still be printed on the map but we can ignore it for
+						// our text directions.
 					}
 				});
 		return temp;
