@@ -67,3 +67,19 @@ For the rest of the week I was working on node removal. I was told by Sarah to u
 In the end it all worked out for RemoveNodes. I did not put it in the first DotGrid function as that is for the web version and I was not confident in
 	correctly placing the function in the right place. If you want to run it yourself, comment out the first DotGrid and use DotGrid2. In my test images in the
 	screenshot folder I used the parameters DotGrid({'NoDoors.png'},50,1).
+
+For the week of 11/11
+I put the RemoveNodes functionality into the web version of DotGrid as I was told by Michael adding it shouldn't effect it, I guess I was being a bit too 
+	overly cautious.
+I started work on making the text steps into something nicer looking. It took me some time to understand what was being said with Sarah's original version,
+	as seen in the first picture for this week. It turns out, after digging through the code and testing Sarah's version, I found out the problem. So
+	how she was doing coordinates was that it had a coordinate saying x,y, one saying x,1, and then 1,y, or something to that extent. I realized that
+	I just needed that first coordinate so just had the method grab the three coordinates and read only the first, as while the coordinates were being
+	read, they were being deleted from the list they were in so the next coordinates could be read next. that lead me to the second image for this week.
+From here I did not know what to do. There is no currently objective way to say which way was north, so I currently have a line assuming that up was north
+	and then saying to move through 1 unit measurements, as we don't know exactly the proportions of the images that could be put in. The third image
+	shows these temporary movement descriptions. I will discuss with the rest of the group this upcomming week how to make the directions even better,
+	as I feel there should be a way that I can descibe more for the directions, but I'm not sure where to go. I also plan to work next week on starting
+	the training for the door detector, as I have familiarity with the cascade detector so it should not take me too long to be able to get rid of doors
+	which is a thing we are hoping to be able to do for the end result, instead of using images that don't have doors already. 
+ 
