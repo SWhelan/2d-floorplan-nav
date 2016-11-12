@@ -4,7 +4,11 @@
 target/*
 codecoverage/*
 /target/
-src/main/resources/static/tmp/*
+!src/main/resources/static/tmp/SaveThisDirectory.txt
+src/main/resources/static/tmp/*.jpg
+src/main/resources/static/tmp/*.jpeg
+src/main/resources/static/tmp/*.png
+src/main/resources/static/tmp/*.gif
 src/matlab/javaclasspath.txt
 src/matlab/matlabinstallpath.txt
 src/matlab/path.txt

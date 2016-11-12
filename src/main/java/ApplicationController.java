@@ -62,8 +62,8 @@ public class ApplicationController {
 			List<Coordinate> exludePoints = new ArrayList<>();
 			exclude.elements().forEachRemaining(e -> exludePoints.add(makeCoord(e, directions.getOriginalFileNames())));
 			directions.setExludePoints(exludePoints);
-			directions.setA(makeCoord(pointA, directions.getOriginalFileNames()), getFileNameOnly(pointA.get("filename").asText()));
-			directions.setB(makeCoord(pointB, directions.getOriginalFileNames()), getFileNameOnly(pointB.get("filename").asText()));
+			directions.setA(makeCoord(pointA, directions.getOriginalFileNames()), Util.getFileNameOnly(pointA.get("filename").asText()));
+			directions.setB(makeCoord(pointB, directions.getOriginalFileNames()), Util.getFileNameOnly(pointB.get("filename").asText()));
 			
 			deleteOldPathImages(directions.getOriginalFileNames());
 			
@@ -78,7 +78,7 @@ public class ApplicationController {
 	
 	private static void deleteOldPathImages(List<String> originalFileNames) {
 		originalFileNames.stream()
-		.map(e -> getFileNameOnly(e))
+		.map(e -> Util.getFileNameOnly(e))
 		.forEach(filename -> {
 			String pathFileName = getPathImageFileName(filename);
 			try {
@@ -96,7 +96,7 @@ public class ApplicationController {
 
 	private static Coordinate makeCoord(JsonNode node, List<String> possibleFileNames) {
 		return new Coordinate(
-				Util.getJavaIndex(getFileNameOnly(node.get("filename").asText()), possibleFileNames),
+				Util.getJavaIndex(Util.getFileNameOnly(node.get("filename").asText()), possibleFileNames),
 				node.get("xcoord").asInt(),
 				node.get("ycoord").asInt()
 				);		
@@ -104,10 +104,6 @@ public class ApplicationController {
 
 	private static List<String> getFileNames(String filenames) {
 		return Arrays.asList(filenames.split(",")).stream().map(e -> e.trim()).collect(Collectors.toList());		
-	}
-
-	private static String getFileNameOnly(String text) {
-		return text.substring(text.lastIndexOf("/") + 1);
 	}
 	
 	private static String getFileNamesString(String[] filenames) {

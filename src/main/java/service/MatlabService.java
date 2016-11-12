@@ -1,9 +1,12 @@
+
 package service;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import containers.Directions;
 import containers.Directions.Coordinate;
@@ -32,6 +35,14 @@ public class MatlabService {
 		command[command.length - 1] = customRunCommand;
 		executeCommand(command);
 		directions.setSteps(Util.readFile(PATH_TXT_PATH));
+		List<String> afterPathFileNames = directions.getOriginalFileNames()
+				.stream()
+				.map(filename -> {
+					String possibleNew = Util.removeFileExtension(filename) + "_path.jpg";
+					File file = new File(possibleNew);
+					return file.exists() ? possibleNew : filename;
+				}).collect(Collectors.toList());
+		directions.setAfterPathFileNames(afterPathFileNames);
 	}
 
 	private static String generateRunCommand(int pointAX, int pointAY, String fileA, int pointBX, int pointBY, String fileB, List<String> filenames) {

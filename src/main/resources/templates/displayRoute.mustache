@@ -5,6 +5,10 @@
     <button id="exclude-points-button" onclick="excludePointsMode()">Exclude Points</button>
     <button onclick="submitData()" class="button-primary">Submit</button>
 </div>
+<div class="row">
+    <button id="reset-pick-points-button" onclick="resetPickPoints()" class="reset-button">Reset End Points</button>
+    <button id="reset-exclude-points-button" onclick="resetExcludePoints()" class="reset-button">Reset Exclude Points</button>
+</div>
 {{#filenames}}
     {{#evenIndex}}
     <div class="row">

@@ -5,6 +5,8 @@ var currWindowWidth = null;
 var currWindowHeight = null;
 var prevWindowWidth = null;
 var prevWindowHeight = null;
+var END_POINT_COLOR = "#33C3F0"; // From skeleton.css to match theme.
+var EXCLUDE_POINT_COLOR = "red";
 
 document.addEventListener("DOMContentLoaded", function() {
 	initPage();
@@ -41,7 +43,7 @@ function handleResponse(data) {
 	var response = JSON.parse(data.currentTarget.response);
 	var steps = response.prettySteps;
 	displaySteps(steps);
-	swapImages();
+	swapImages(response.afterPathFileNames);
 }
 
 function addClickHandlersForPicking() {
@@ -98,7 +100,7 @@ function whiteButton(value) {
 }
 
 function addPoint(event) {
-	var color = "#33C3F0"; // From skeleton.css to match theme.
+	var color = END_POINT_COLOR;
 	if(pointB != null) {
 		return;
 	}
@@ -117,7 +119,32 @@ function excludePoint(event) {
 	var point = getClickInformation(event);
 	if (point.xcoord > 0) {
 		excludePoints.push(point);
-		displayClick(event, "red");
+		displayClick(event, EXCLUDE_POINT_COLOR);
+	}
+}
+
+function resetPickPoints() {
+	pointA = null;
+	pointB = null;
+	resetPoints(false);
+}
+
+function resetExcludePoints() {
+	excludePoints = [];
+	resetPoints(true);
+}
+
+function resetPoints(exclude) {
+	var temp = document.getElementsByClassName("point");
+	var points = [];
+	for(var i = 0; i < temp.length; i++) {
+		points[i] = temp[i];
+	}
+	for(var i = 0; i < points.length; i++) {
+		var point = points[i];
+		if ((exclude && point.dataset.color === EXCLUDE_POINT_COLOR) || (!exclude && point.dataset.color === END_POINT_COLOR)) {
+			point.parentNode.removeChild(point);
+		}
 	}
 }
 
@@ -126,7 +153,7 @@ function displayClick(event, color) {
 	var margin = 15;
 	var top = (event.pageY - margin);
 	var left = Math.round(event.pageX - holder.getBoundingClientRect().left - margin);
-	holder.innerHTML += "<div class='point' style='background: " + color + "; top: "+ top +"px; left: " + left + "px;'></div>";
+	holder.innerHTML += "<div class='point' data-color='" + color + "' style='background: " + color + "; top: "+ top +"px; left: " + left + "px;'></div>";
 }
 
 function displayLoadingScreen() {
@@ -172,11 +199,11 @@ function displaySteps(steps) {
 	}
 }
 
-function swapImages() {
+function swapImages(newNames) {
 	var images = document.getElementsByClassName("floor");
 	for(var i = 0; i < images.length; i++) {
 		var original = images.item(i).dataset.original;
-		images.item(i).src = original.substring(0, original.length - 4) + "_path.jpg";
+		images.item(i).src = newNames[i];
 	}
 }
 

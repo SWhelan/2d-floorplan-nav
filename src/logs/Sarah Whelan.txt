@@ -97,3 +97,11 @@ Re-organized routes.js which handles the swapping out of everything after the aj
 
 Screenshots in folder for week 6. 
 
+Week 7 11/5 - 11/11
+
+Made the matlab path relative to a config file for loading it from the website. Added resetting
+the start and end points and resetting the blocked points. Began correcting the way images show
+up after the path is generated. Matlab generats only the images that are needed for the path but 
+the website had assumed that all images would be regenerated so that is almost fixed. Ran into
+a bug with starting points on images that are not the first index. So have been working on debugging
+that but that has not been finished. 

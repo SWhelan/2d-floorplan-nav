@@ -44,4 +44,12 @@ public class Util {
 			return new ArrayList<>();
 		}
 	}
+	
+	public static String getFileNameOnly(String text) {
+		return text.substring(text.lastIndexOf("/") + 1);
+	}
+
+	public static String removeFileExtension(String filename) {
+		return filename.substring(0, filename.lastIndexOf("."));
+	}
 }

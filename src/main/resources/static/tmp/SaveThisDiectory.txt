@@ -1,0 +1,1 @@
+I want the tmp directory to be shared but not any of the files inside it.
