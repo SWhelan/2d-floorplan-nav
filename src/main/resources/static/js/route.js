@@ -191,12 +191,25 @@ function saveWindowSize() {
 	currWindowHeight = window.innerHeight;
 }
 
+var directions;
+var directionNumber = 0;
+
 function displaySteps(steps) {
-	var holder = element("steps-holder");
-	holder.innerHTML == "";
-	for(var i = 0; i < steps.length; i++) {
-		holder.innerHTML += "<div class='step'>" + steps[i] + "</div>";
+	directions = steps;
+	directionNumber = 0;
+	updateStep();
+	element("steps-holder").onclick = function() {
+		updateStep();
 	}
+}
+
+function updateStep() {
+	var holder = element("steps-holder");
+	holder.innerHTML = "";
+	if (directions.length > directionNumber) {
+		holder.innerHTML += directions[directionNumber];
+	}
+	directionNumber = directionNumber + 1;
 }
 
 function swapImages(newNames) {

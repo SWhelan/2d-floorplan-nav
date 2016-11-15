@@ -9,6 +9,7 @@
     <button id="reset-pick-points-button" onclick="resetPickPoints()" class="reset-button">Reset End Points</button>
     <button id="reset-exclude-points-button" onclick="resetExcludePoints()" class="reset-button">Reset Exclude Points</button>
 </div>
+<div id="steps-holder"></div>
 {{#filenames}}
     {{#evenIndex}}
     <div class="row">
@@ -22,7 +23,6 @@
     {{/evenIndex}}
 {{/filenames}}
 <div id="point-holder"></div>
-<div id="steps-holder"></div>
 </div> <!-- Ends container in header.mustache -->
 <div id="loading-screen"></div>
 <div id="loading-text"><h2>Loading route please wait...</h2></div>

@@ -30,7 +30,7 @@ function DotGrid(x1, y1, z1, x2, y2, z2)
     writeFile = fopen('path.txt', 'w');
     fprintf(writeFile, formatSpec, transpose(path));
     fclose(writeFile);
-    %exit;
+    exit;
 end
 
 %Entry level method for testing ptahfinding directly from matlab
@@ -90,8 +90,7 @@ function filenames = GetFilenames()
     filenames = ReadFile('filenames.txt');
 end
 
-function data = ReadFile(filename)
-    disp(filename)
+function data = ReadFile(filename)   
     fileId = fopen(filename, 'r');
     data = cell(0,1);
     line = fgetl(fileId);
