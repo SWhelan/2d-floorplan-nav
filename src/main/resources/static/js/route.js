@@ -7,6 +7,8 @@ var prevWindowWidth = null;
 var prevWindowHeight = null;
 var END_POINT_COLOR = "#33C3F0"; // From skeleton.css to match theme.
 var EXCLUDE_POINT_COLOR = "red";
+var directions = null;
+var directionNumber = 0;
 
 document.addEventListener("DOMContentLoaded", function() {
 	initPage();
@@ -191,25 +193,26 @@ function saveWindowSize() {
 	currWindowHeight = window.innerHeight;
 }
 
-var directions;
-var directionNumber = 0;
-
-function displaySteps(steps) {
+function displaySteps(steps) {	
 	directions = steps;
 	directionNumber = 0;
-	updateStep();
-	element("steps-holder").onclick = function() {
-		updateStep();
+	updateStep(0);
+	element("steps-back").onclick = function() {
+		updateStep(-1);
+	}
+	element("steps-forward").onclick = function() {
+		updateStep(1);
 	}
 }
 
-function updateStep() {
-	var holder = element("steps-holder");
-	holder.innerHTML = "";
-	if (directions.length > directionNumber) {
-		holder.innerHTML += directions[directionNumber];
+function updateStep(increment) {
+	var holder = element("steps-text");
+	var possibleIndex = directionNumber + increment; 
+	if (directions.length > possibleIndex && possibleIndex >= 0) {
+		directionNumber = possibleIndex;
+		holder.innerHTML = "";
+		holder.innerHTML = directions[directionNumber];
 	}
-	directionNumber = directionNumber + 1;
 }
 
 function swapImages(newNames) {

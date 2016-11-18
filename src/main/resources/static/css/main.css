@@ -51,7 +51,17 @@ body {
     display: none;
 }
 
-#steps-holder {
-    color: green;
-    display: block;
+#steps-back {
+    background: green;
+    color: white;
+}
+
+#steps-forward {
+    background: green;
+    color: white;
+}
+
+#steps-text {
+    background: green;
+    color: white;
 }
