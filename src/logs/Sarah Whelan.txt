@@ -105,3 +105,19 @@ up after the path is generated. Matlab generates only the images that are needed
 the website had assumed that all images would be regenerated so that is almost fixed. Ran into
 a bug with starting points on images that are not the first index. So have been working on debugging
 that but that has not been finished.
+
+Week 8 11/12 - 11/18
+
+Looked into why Jonathan was needing to do a bunch of extra stuff to get directions to work.
+It turns out the path matlab got was stored in a matrix like x, y, index but when the path
+file that the website reads from was being generated the transpose of the matrix was taken
+and only two values were printed leading to the path file being x, 1 | 1, y | etc. So I changed
+the way that file was being generated and now the direction stuff Jonathan added doesn't need to
+skip every othe point or something like that. Then I moved the display of the steps from beneath
+the images to above them with the rest of the buttons. Then I added javascript code to allow
+forward and backward movement/displaying of the steps and cleaned up the CSS of the display.
+Also did some brainstorming on design for room annotations and how we can fit those into the
+UI and into the path finding in that we want to allow people to label rooms then say things
+like "find path from room1 I labeled to room 2 I labeled" but no code for that yet.
+
+Screenshot of directions being displayed is in folder for week 8.
