@@ -82,4 +82,16 @@ From here I did not know what to do. There is no currently objective way to say 
 	as I feel there should be a way that I can descibe more for the directions, but I'm not sure where to go. I also plan to work next week on starting
 	the training for the door detector, as I have familiarity with the cascade detector so it should not take me too long to be able to get rid of doors
 	which is a thing we are hoping to be able to do for the end result, instead of using images that don't have doors already. 
+
+For the week of 11/18
+I attempted to add on to the prettier directions after Sarah fixed the x1, 1y, xy, problem from last week. My plan this week was to make it so instead of
+	having the directions repeatedly say go south 1 unit, I thought up of a way to combine those repeating steps. The plan was to compare the coordinate
+	we were on with the next two ones on the list, checking if the comparison between the one we are on and the next one was the same as the next
+	coordinate and the coordinate after that one. If they were the same (so like if the x coordinate was the same in all three or if x1>x2,y1>y2 and 
+	x2>x3,y2>y3) then it would be a repeating direction, so we would add one to the unit variable that is counting up all the unit movements. From there,
+	once the repetition has stopped, it would use the unit variable in the string and be added to the string list to be put up on the website, but for
+	some reason I could not figure out why it was not working. We plan on meeting next week (even though its Thanksgiving break week) to discuss the last
+	few weeks and I will ask for help there.
+I also worked on the door detector, but its not nearly close to where I want it to be right now. I plan on finishing it up during Thanksgiving break so I can
+	get a break from my family at one point. Its not dificult, its just a very tedious and slow process.
  
