@@ -7,8 +7,13 @@ var prevWindowWidth = null;
 var prevWindowHeight = null;
 var END_POINT_COLOR = "#33C3F0"; // From skeleton.css to match theme.
 var EXCLUDE_POINT_COLOR = "red";
+var ANNOTATION_POINT_COLOR = "green";
 var directions = null;
 var directionNumber = 0;
+var annotations = [];
+var corners = [];
+var fistCornerId = null;
+var uniqueClickId = 0;
 
 document.addEventListener("DOMContentLoaded", function() {
 	initPage();
@@ -22,14 +27,14 @@ function initPage() {
 }
 
 function pickPointsMode() {
-	removeClickHandlersForExcluding();
+	removeClickHandlers();
 	addClickHandlersForPicking();
 	selectPickPointsButton();
 	changeCursor("pointer");
 }
 
 function excludePointsMode() {
-	removeClickHandlersForPicking();
+	removeClickHandlers();
 	addClickHandlersForExcluding();
 	selectExcludePointsButton();
 	changeCursor("url('images/paintingcursor.ico'), pointer");
@@ -54,10 +59,6 @@ function addClickHandlersForPicking() {
 	});
 }
 
-function removeClickHandlersForPicking() {
-	setClickHandlersOnFloors(null);
-}
-
 function addClickHandlersForExcluding() {
 	setClickHandlersOnFloors(function(event) {
 		excludePoint(event);		
@@ -72,7 +73,7 @@ function addClickHandlersForExcluding() {
 	}
 }
 
-function removeClickHandlersForExcluding() {
+function removeClickHandlers() {
 	setClickHandlersOnFloors(null);
 }
 
@@ -86,11 +87,19 @@ function setClickHandlersOnFloors(onClickFunction) {
 function selectExcludePointsButton() {
 	greyButton("exclude");
 	whiteButton("pick");
+	whiteButton("annotation");
 }
 
 function selectPickPointsButton() {
 	greyButton("pick");
 	whiteButton("exclude");
+	whiteButton("annotation");
+}
+
+function selectAnnotationButton() {
+	whiteButton("pick");
+	whiteButton("exclude");
+	greyButton("annotation");
 }
 
 function greyButton(value) {
@@ -150,12 +159,38 @@ function resetPoints(exclude) {
 	}
 }
 
+function annotationMode() {
+	selectAnnotationButton();
+	document.body.style.cursor = "crosshair";
+	removeClickHandlers();
+	setClickHandlersOnFloors(function(event) {
+		corners.push(getClickInformation(event));		
+		var dotId = displayClick(event, ANNOTATION_POINT_COLOR);
+		if(corners.length == 1) {
+			firstCornerId = dotId;
+		}
+		if(corners.length > 0) {
+			element(firstCornerId).onclick = function() {
+				var title = prompt("Name the annotation:");
+				var annotation = {};
+				annotation.title = title;
+				annotation.points = corners;	
+				annotations.push(annotation);
+				corners = [];
+				updateAnnotationsList();
+			}
+		}
+	});
+}
+
 function displayClick(event, color) {
 	var holder = element("point-holder");
 	var margin = 15;
 	var top = (event.pageY - margin);
 	var left = Math.round(event.pageX - holder.getBoundingClientRect().left - margin);
-	holder.innerHTML += "<div class='point' data-color='" + color + "' style='background: " + color + "; top: "+ top +"px; left: " + left + "px;'></div>";
+	uniqueClickId++;
+	holder.innerHTML += "<div id='" + parseInt(uniqueClickId) +"' class='point' data-color='" + color + "' style='background: " + color + "; top: "+ top +"px; left: " + left + "px;'></div>";	
+	return parseInt(uniqueClickId);
 }
 
 function displayLoadingScreen() {
