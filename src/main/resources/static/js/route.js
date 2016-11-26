@@ -164,8 +164,11 @@ function annotationMode() {
 	document.body.style.cursor = "crosshair";
 	removeClickHandlers();
 	setClickHandlersOnFloors(function(event) {
-		corners.push(getClickInformation(event));		
 		var dotId = displayClick(event, ANNOTATION_POINT_COLOR);
+		var corner = {};
+		corner.data = getClickInformation(event);
+		corner.id = dotId;
+		corners.push(corner);
 		if(corners.length == 1) {
 			firstCornerId = dotId;
 		}
@@ -174,8 +177,9 @@ function annotationMode() {
 				var title = prompt("Name the annotation:");
 				var annotation = {};
 				annotation.title = title;
-				annotation.points = corners;	
+				annotation.corners = corners;	
 				annotations.push(annotation);
+				finalizeAnnotation(annotation);
 				corners = [];
 				updateAnnotationsList();
 			}
@@ -183,11 +187,42 @@ function annotationMode() {
 	});
 }
 
+function finalizeAnnotation(annotation) {
+	var corners = annotation.corners;
+	var avgX = 0;
+	var avgY = 0;
+	var displayX = 0;
+	var displayY = 0;
+	for (var i = 0; i < corners.length; i++) {
+		element(corners[i].id).style.width = "13px";
+		element(corners[i].id).style.height = "13px";
+		avgX = avgX + corners[i].data.xcoord;
+		avgY = avgY + corners[i].data.ycoord;
+		displayX = displayX + corners[i].data.displayWidth;
+		displayY = displayY + corners[i].data.displayHeight;
+	}
+	
+	avgX = avgX / corners.length;
+	avgY = avgY / corners.length;
+	displayX = displayX / corners.length;
+	displayY = displayY / corners.length;
+	
+	displayClickFromPoint(display, displayY, "purple");
+}
+
+function updateAnnotationsList() {
+	
+}
+
 function displayClick(event, color) {
+	return displayClickFromPoint(event.pageX, event.pageY, color);
+}
+
+function displayClickFromPoint(x, y, color) {
 	var holder = element("point-holder");
 	var margin = 15;
-	var top = (event.pageY - margin);
-	var left = Math.round(event.pageX - holder.getBoundingClientRect().left - margin);
+	var top = (y - margin);
+	var left = Math.round(x - holder.getBoundingClientRect().left - margin);
 	uniqueClickId++;
 	holder.innerHTML += "<div id='" + parseInt(uniqueClickId) +"' class='point' data-color='" + color + "' style='background: " + color + "; top: "+ top +"px; left: " + left + "px;'></div>";	
 	return parseInt(uniqueClickId);
@@ -283,7 +318,17 @@ function getClickInformation(event) {
 	var actualX = Math.round((clientOffsetX / displayWidth) * naturalWidth);
 	var actualY = Math.round((clientOffsetY / displayHeight) * naturalHeight);
 	
-	var information = {"filename" : fileName, "xcoord" : actualX, "ycoord" : actualY};
+	var information = {
+			"filename" : fileName,
+			"xcoord" : actualX,
+			"ycoord" : actualY,
+			"offsetX" : clientOffsetX,
+			"offsetY" : clientOffsetY,
+			"displayWidth" : displayWidth,
+			"displayHeight" : displayHeight,
+			"naturalWidth" : naturalWidth,
+			"naturalHeight" : naturalHeight
+		};
 	return information;
 }
 

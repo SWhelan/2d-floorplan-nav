@@ -121,3 +121,14 @@ UI and into the path finding in that we want to allow people to label rooms then
 like "find path from room1 I labeled to room 2 I labeled" but no code for that yet.
 
 Screenshot of directions being displayed is in folder for week 8.
+
+Week 9 11/19 - 11/25
+
+Added the beginnings of the annotation feature. Basically this will allow people to select a
+polygon and give it a label. Then the selected annotations can be used as alternatives to
+the start and end points. So far an annotation can be created and a list is kept but the
+list is not displayed yet so that is next and then after that need code for choosing an
+annotation instead of a point for the begin/end points. So far this has only added one button
+to the UI (on the top row) and points can be added to an annotation (list of points) and then
+once the starting point has been clicked again a title prompt appears. Once a title has been
+entered an annotation is added to a list.
