@@ -1,10 +1,29 @@
 {{> header}}
 <div class="row">
-    <h1>Click two points on the map for directions between them.</h1>
+    <h4>Click two points on the map for directions between them.</h4>
+</div>
+<div class="row">
     <button id="pick-points-button" onclick="pickPointsMode()" class="selected-button">Pick End Points</button>
     <button id="exclude-points-button" onclick="excludePointsMode()">Exclude Points</button>
     <button id="annotation-points-button" onclick="annotationMode()">Add Annotation</button>
     <button onclick="submitData()" class="button-primary">Submit</button>
+</div>
+<div class="row">
+    <div class="one columns">
+        or choose annotations:
+    </div>
+    <div class="four columns">
+        <label for="annotationListA">Point A</label>
+        <select class="u-full-width" id="annotationListA" onchange="annotationAChosen()">
+            <option value="-1">Select an annotation: </option>
+        </select>
+    </div>
+    <div class="four columns">
+        <label for="annotationListB">Point B</label>
+        <select class="u-full-width" id="annotationListB" onchange="annotationBChosen()">
+            <option value="-1">Select an annotation: </option>
+        </select>
+    </div>
 </div>
 <div class="row">
     <button id="reset-pick-points-button" onclick="resetPickPoints()" class="reset-button">Reset End Points</button>

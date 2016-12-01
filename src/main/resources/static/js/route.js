@@ -41,8 +41,27 @@ function excludePointsMode() {
 }
 
 function submitData() {
-	displayLoadingScreen();
-	sendData();
+	var aIndex = parseInt(element("annotationListA").value);
+	var bIndex = parseInt(element("annotationListB").value);
+	if((pointA != null && pointB != null) || (aIndex > -1 && bIndex > -1)) {
+		if(pointA == null) {
+			pointA = makePointFromAnnotation(annotations[aIndex]);
+			pointB = makePointFromAnnotation(annotations[bIndex]);
+		}
+		displayLoadingScreen();
+		sendData();
+	} else {
+		alert("Must select at least a starting and an ending point.");
+	}
+}
+
+function makePointFromAnnotation(annotation) {
+	var point = {
+			"filename" : annotation.corners[0].data.filename,
+			"xcoord" : annotation.avgX,
+			"ycoord" : annotation.avgY,
+		};
+	return point;
 }
 
 function handleResponse(data) {
@@ -181,7 +200,8 @@ function annotationMode() {
 				annotations.push(annotation);
 				finalizeAnnotation(annotation);
 				corners = [];
-				updateAnnotationsList();
+				firstCornerId = null;
+				updateAnnotationsLists(annotation, annotations.length - 1);
 			}
 		}
 	});
@@ -198,24 +218,46 @@ function finalizeAnnotation(annotation) {
 		element(corners[i].id).style.height = "13px";
 		avgX = avgX + corners[i].data.xcoord;
 		avgY = avgY + corners[i].data.ycoord;
-		displayX = displayX + corners[i].data.displayWidth;
-		displayY = displayY + corners[i].data.displayHeight;
+		displayX = displayX + corners[i].data.pageX;
+		displayY = displayY + corners[i].data.pageY;
 	}
 	
 	avgX = avgX / corners.length;
 	avgY = avgY / corners.length;
+	annotation.avgX = truncate(avgX);
+	annotation.avgY = truncate(avgY);
+	
 	displayX = displayX / corners.length;
 	displayY = displayY / corners.length;
 	
-	displayClickFromPoint(display, displayY, "purple");
+	var middleDotId = displayClickFromPoint(displayX, displayY, "purple");
+	element(middleDotId).style.width = "13px";
+	element(middleDotId).style.height = "13px";
 }
 
-function updateAnnotationsList() {
-	
+function updateAnnotationsLists(annotation, index) {
+	updateAnnotationsList(element("annotationListA"), annotation, index);	
+	updateAnnotationsList(element("annotationListB"), annotation, index);
+}
+
+function updateAnnotationsList(list, annotation, index) {
+	list.options[list.options.length] = new Option(annotation.title, index);
 }
 
 function displayClick(event, color) {
 	return displayClickFromPoint(event.pageX, event.pageY, color);
+}
+
+function annotationAChosen() {
+	if(element("annotationListA").value != "-1") {
+		resetPickPoints();
+	}
+}
+
+function annotationBChosen() {
+	if(element("annotationListB").value != "-1") {
+		resetPickPoints();
+	}
 }
 
 function displayClickFromPoint(x, y, color) {
@@ -327,7 +369,9 @@ function getClickInformation(event) {
 			"displayWidth" : displayWidth,
 			"displayHeight" : displayHeight,
 			"naturalWidth" : naturalWidth,
-			"naturalHeight" : naturalHeight
+			"naturalHeight" : naturalHeight,
+			"pageX" : event.pageX,
+			"pageY" : event.pageY
 		};
 	return information;
 }
@@ -338,4 +382,9 @@ function changeCursor(value) {
 
 function getFloors() {
 	return document.getElementsByClassName("floor");
+}
+
+// http://stackoverflow.com/questions/10149806/truncate-round-whole-number-in-javascript
+function truncate(number) {
+	return number > 0 ? Math.floor(number) : Math.ceil(number);
 }
