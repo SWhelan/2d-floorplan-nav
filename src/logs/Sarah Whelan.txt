@@ -132,3 +132,24 @@ annotation instead of a point for the begin/end points. So far this has only add
 to the UI (on the top row) and points can be added to an annotation (list of points) and then
 once the starting point has been clicked again a title prompt appears. Once a title has been
 entered an annotation is added to a list.
+
+Week 10 11/26 - 12/2
+
+Finished the annotation feature. Each annotation can be any number of dots and has an associated
+name that is user generated. The middle of the annotation is then displayed in a different color
+and that point is used as the starting or ending point when annotations are given instead of
+single points. There are now two drop down selectors that display the list of annotations.
+Once a value is chosen from either of the drop downs any other start/end points are removed.
+The submit now also checks to make sure that in some fashion there is both a start and an end
+point. The annotation dots also get smaller when the annotation is completed. Also for this week
+I did not work on the finding/removing door thing because Jonathan did that - as he was the most
+familiar with the way we were removing objects from making the elevator remover. So instead I moved
+on to testing. This week I wrote tests for the javascript side of my code. Next week for the java
+side. These are just unit tests so they don't cover some of the more obvious working/non-working
+methods. To cover those not covered by unit tests we have been doing functional tests during 
+development an kind of end-to-end manual tests that would expose any obvious errors. To run the
+javascript tests it is just start server go to localhost:4567/test and a summary is displayed.
+I am using Qunit for the tests and that is what handles the summary. Obviously this route would
+be removed for production systems. For the java side tests I will use jUnit and run them via maven.
+
+Screenshot of the annotation drop downs is in folder for week 10.
