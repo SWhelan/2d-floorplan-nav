@@ -107,13 +107,17 @@ public class Directions {
 		return fileB;
 	}
 	
-	public void preprocessForResponse() {
-		this.generatePrettySteps(this.generateCoords());
+	public List<String> getPrettySteps() {
+		return this.prettySteps;
 	}
 	
-	private List<Coordinate> generateCoords() {
+	public void preprocessForResponse() {
+		this.prettySteps = Directions.generatePrettySteps(Directions.generateCoords(this.steps));
+	}
+	
+	private static List<Coordinate> generateCoords(List<String> steps) {
 		List<Coordinate> temp = new ArrayList<>(); 
-				this.steps.stream()
+				steps.stream()
 				.map(string -> string.split(","))
 				.forEach(array -> {
 					try {
@@ -128,17 +132,18 @@ public class Directions {
 		return temp;
 	}
 	
-	private void generatePrettySteps(List<Coordinate> coords) {
-	    this.prettySteps = new ArrayList<>();
+	private static List<String> generatePrettySteps(List<Coordinate> coords) {
+	    List<String> prettySteps = new ArrayList<>();
 	    prettySteps.add("Assuming that north is up");
 	    prettySteps.add("Start");
 	    while(coords.size() > 1) {
 	        prettySteps.add(generatePrettyStep(coords.remove(0), coords.remove(0)));
 	    }
 	    prettySteps.add("End");
+	    return prettySteps;
 	}
 
-	private String generatePrettyStep(Coordinate coord1, Coordinate coord2) {
+	private static String generatePrettyStep(Coordinate coord1, Coordinate coord2) {
 	    if(coord1.getX()>coord2.getX() && coord1.getY()==coord2.getY()){
 	        return "Go west 1 unit";
 	    }
@@ -167,89 +172,4 @@ public class Directions {
 	        return "mistakes were made";
 	    }
 	}
-	
-//	private void generatePrettySteps(List<Coordinate> coords) {
-//		this.prettySteps = new ArrayList<>();
-//		prettySteps.add("Assuming that north is up");
-//		prettySteps.add("Start");
-//		while(coords.size() > 1) {
-//			boolean repeat = true;
-//			int unit = 1; 
-//			while(repeat) {
-//				if(coords.get(unit-1)== null || coords.get(unit)==null || coords.get(unit+1)==null){
-//					repeat= false;
-//				}
-//				else if(checkNextCoords(coords, unit)){
-//					unit++;
-//				}
-//				else{
-//					repeat = false;
-//				}
-//			}
-//			prettySteps.add(generatePrettyStep(coords.get(0), coords.get(1), unit));
-//			while(unit > 0){
-//				coords.remove(0);
-//				unit--;
-//			}
-//		}
-//		prettySteps.add("End");
-//	}
-//
-//	private String generatePrettyStep(Coordinate coord1, Coordinate coord2, int unit) {
-//		if(coord1.getX()>coord2.getX() && coord1.getY()==coord2.getY()){
-//			return String.format("Go west %d unit(s)", unit);
-//		}
-//		if(coord1.getX()<coord2.getX() && coord1.getY()==coord2.getY()){
-//			return String.format("Go east %d unit(s)", unit);
-//		}
-//		if(coord1.getX()==coord2.getX() && coord1.getY()>coord2.getY()){
-//			return String.format("Go north %d unit(s)", unit);
-//		}
-//		if(coord1.getX()==coord2.getX() && coord1.getY()<coord2.getY()){
-//			return String.format("Go south %d unit(s)", unit);
-//		}
-//		if(coord1.getX()>coord2.getX() && coord1.getY()<coord2.getY()){
-//			return String.format("Go southwest %d unit(s)", unit);
-//		}
-//		if(coord1.getX()>coord2.getX() && coord1.getY()>coord2.getY()){
-//			return String.format("Go northwest %d unit(s)", unit);
-//		}
-//		if(coord1.getX()<coord2.getX() && coord1.getY()<coord2.getY()){
-//			return String.format("Go southeast %d unit(s)", unit);
-//		}
-//		if(coord1.getX()<coord2.getX() && coord1.getY()>coord2.getY()){
-//			return String.format("Go northeast %d unit(s)", unit);
-//		}
-//		else{
-//			return "mistakes were made";
-//		}
-//	}
-//	
-//	private Boolean checkNextCoords(List<Coordinate> coords, int unit){
-//		if(coords.get(unit-1).getX()==coords.get(unit).getX() && coords.get(unit).getX()==coords.get(unit+1).getX()) {
-//			return true;
-//		}
-//		if(coords.get(unit-1).getY()==coords.get(unit).getY() && coords.get(unit).getY()==coords.get(unit+1).getY()) {
-//			return true;
-//		}
-//		if(coords.get(unit-1).getX()>coords.get(unit).getX() && coords.get(unit-1).getY()>coords.get(unit).getY() && 
-//				coords.get(unit).getX()>coords.get(unit+1).getX() && coords.get(unit).getY()>coords.get(unit+1).getY()) {
-//			return true;
-//		}
-//		if(coords.get(unit-1).getX()<coords.get(unit).getX() && coords.get(unit-1).getY()>coords.get(unit).getY() && 
-//				coords.get(unit).getX()<coords.get(unit+1).getX() && coords.get(unit).getY()>coords.get(unit+1).getY()) {
-//			return true;
-//		}
-//		if(coords.get(unit-1).getX()>coords.get(unit).getX() && coords.get(unit-1).getY()<coords.get(unit).getY() && 
-//				coords.get(unit).getX()>coords.get(unit+1).getX() && coords.get(unit).getY()<coords.get(unit+1).getY()) {
-//			return true;
-//		}
-//		if(coords.get(unit-1).getX()<coords.get(unit).getX() && coords.get(unit-1).getY()<coords.get(unit).getY() && 
-//				coords.get(unit).getX()<coords.get(unit+1).getX() && coords.get(unit).getY()<coords.get(unit+1).getY()) {
-//			return true;
-//		}
-//		else{
-//			return false;
-//		}		
-//	}
 }
