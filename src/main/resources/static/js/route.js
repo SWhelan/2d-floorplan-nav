@@ -48,8 +48,8 @@ function submitData() {
 			pointA = makePointFromAnnotation(annotations[aIndex]);
 			pointB = makePointFromAnnotation(annotations[bIndex]);
 		}
-		displayLoadingScreen();
-		sendData();
+		showLoadingScreen();
+		sendData(false);
 	} else {
 		alert("Must select at least a starting and an ending point.");
 	}
@@ -69,7 +69,7 @@ function handleResponse(data) {
 	var response = JSON.parse(data.currentTarget.response);
 	var steps = response.prettySteps;
 	displaySteps(steps);
-	swapImages(response.afterPathFileNames);
+	swapImages(getFloors(), response.afterPathFileNames);
 }
 
 function addClickHandlersForPicking() {
@@ -122,11 +122,17 @@ function selectAnnotationButton() {
 }
 
 function greyButton(value) {
-	element(value + "-points-button").style.background = "lightgrey";
+	var button = element(value + "-points-button");
+	if (button != null) {
+		button.style.background = "lightgrey";
+	}
 }
 
 function whiteButton(value) {
-	element(value + "-points-button").style.background = "white";
+	var button = element(value + "-points-button");
+	if(button != null) {
+		button.style.background = "white";
+	}
 }
 
 function addPoint(event) {
@@ -176,6 +182,7 @@ function resetPoints(exclude) {
 			point.parentNode.removeChild(point);
 		}
 	}
+	return points;
 }
 
 function annotationMode() {
@@ -214,8 +221,10 @@ function finalizeAnnotation(annotation) {
 	var displayX = 0;
 	var displayY = 0;
 	for (var i = 0; i < corners.length; i++) {
-		element(corners[i].id).style.width = "13px";
-		element(corners[i].id).style.height = "13px";
+		if(element(corners[i].id) != null) {
+			element(corners[i].id).style.width = "13px";
+			element(corners[i].id).style.height = "13px";
+		}
 		avgX = avgX + corners[i].data.xcoord;
 		avgY = avgY + corners[i].data.ycoord;
 		displayX = displayX + corners[i].data.pageX;
@@ -226,7 +235,6 @@ function finalizeAnnotation(annotation) {
 	avgY = avgY / corners.length;
 	annotation.avgX = truncate(avgX);
 	annotation.avgY = truncate(avgY);
-	
 	displayX = displayX / corners.length;
 	displayY = displayY / corners.length;
 	
@@ -240,8 +248,8 @@ function updateAnnotationsLists(annotation, index) {
 	updateAnnotationsList(element("annotationListB"), annotation, index);
 }
 
-function updateAnnotationsList(list, annotation, index) {
-	list.options[list.options.length] = new Option(annotation.title, index);
+function updateAnnotationsList(select, annotation, index) {
+	select.options[select.options.length] = new Option(annotation.title, index);
 }
 
 function displayClick(event, color) {
@@ -270,7 +278,7 @@ function displayClickFromPoint(x, y, color) {
 	return parseInt(uniqueClickId);
 }
 
-function displayLoadingScreen() {
+function showLoadingScreen() {
 	element("loading-screen").style.display = "block";
 	element("loading-text").style.display = "block";
 }
@@ -319,6 +327,10 @@ function displaySteps(steps) {
 
 function updateStep(increment) {
 	var holder = element("steps-text");
+	updateStepHelper(holder, increment);
+}
+
+function updateStepHelper(holder, increment) {
 	var possibleIndex = directionNumber + increment; 
 	if (directions.length > possibleIndex && possibleIndex >= 0) {
 		directionNumber = possibleIndex;
@@ -327,15 +339,13 @@ function updateStep(increment) {
 	}
 }
 
-function swapImages(newNames) {
-	var images = document.getElementsByClassName("floor");
+function swapImages(images, newNames) {
 	for(var i = 0; i < images.length; i++) {
-		var original = images.item(i).dataset.original;
-		images.item(i).src = newNames[i];
+		images[i].src = newNames[i];
 	}
 }
 
-function sendData() {
+function sendData(testing) {
 	// https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/send
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', '/uploadPoints', true);
@@ -344,7 +354,10 @@ function sendData() {
 		handleResponse(response);
 	};
 	var data = JSON.stringify({pointA: pointA, pointB: pointB, excludeList: excludePoints});
-	xhr.send(data);
+	if(!testing) {
+		xhr.send(data);
+	}
+	return data;
 }
 
 function getClickInformation(event) {
@@ -356,7 +369,6 @@ function getClickInformation(event) {
 	var naturalHeight = imageElem.naturalHeight;
 	var clientOffsetX = event.offsetX;
 	var clientOffsetY = event.offsetY;
-	
 	var actualX = Math.round((clientOffsetX / displayWidth) * naturalWidth);
 	var actualY = Math.round((clientOffsetY / displayHeight) * naturalHeight);
 	

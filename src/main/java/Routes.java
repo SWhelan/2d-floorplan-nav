@@ -13,6 +13,8 @@ public class Routes {
 		post("/uploadImage", (rq, rs) -> ApplicationController.uploadImage(rq, rs), MUSTACHE_RESPONSE);
 		post("/processImageOrder", (rq, rs) -> ApplicationController.uploadImageOrdering(rq, rs), MUSTACHE_RESPONSE);
 		post("/uploadPoints", (rq, rs) -> ApplicationController.getRoute(rq, rs), JSON_RESPONSE);
+		
+		get("/test", (rq, rs) -> TestController.renderTests(rq, rs), MUSTACHE_RESPONSE);
 	}
 
 }
