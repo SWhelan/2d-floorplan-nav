@@ -94,4 +94,19 @@ I attempted to add on to the prettier directions after Sarah fixed the x1, 1y, x
 	few weeks and I will ask for help there.
 I also worked on the door detector, but its not nearly close to where I want it to be right now. I plan on finishing it up during Thanksgiving break so I can
 	get a break from my family at one point. Its not dificult, its just a very tedious and slow process.
+
+For the week of 12/2 
+I kept on trying to get the doordetector to work. I currently have the detector getting the doors really well, in the way that we want them to, with the
+	bounding box capturing the whole door in order for us to delete it all for pathfinding sake. However, depeneding on the parameters I place, it
+	either finds almost all the doors and some random non-door things or does not find enough doors, but is only doors. I've been trying to tweek it but
+	it seems like everything I do for this causes problems. Another thing I noticed, however, is that if we leave doors on in the dwg file (which is where
+	we get the blueprint from which turn into a png/jpg, removing unessisary text and such beforehand) we also leave behind the elevator doors, which look
+	almost too similar to the walls for them to be detected and deleted. So I think we might have to compromize and just use the files we have been using
+	that already has the doors off.
+I also did this week was atempted again the directions, but I wasnt going anywhere with them. But while I was attempting to work on that, I realized that what
+	I worked on with the RemoveNodes wasnt showing up. I digged through the files and found that the text file used to display the excluded nodes was not
+	the same as the one I was using. I guess I forgot to change it earlier. Either way, I tried it out and it seems to work well enough, as long as you 
+	thoroughly paint over the parts you want to remove. I tried making the area of removal bigger but it just seems to work better when you overpaint.
+Next week is last week, so its time to do last bits of tweeking and test to make sure we have the best we are able to by next Friday.
+
  
