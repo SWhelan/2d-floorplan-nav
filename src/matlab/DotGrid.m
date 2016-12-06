@@ -10,7 +10,7 @@ function DotGrid(x1, y1, z1, x2, y2, z2)
     z = [z1 z2];
     x = round(x/width);
     y = round(y/width);
-    noNodes= load('NoNodes.txt');
+    noNodes= load('exclude_points.txt');
     noNodesImg = cell(size(files,1),size(files,2));
     if isempty(noNodes)== 0
         for i=1:size(files,2)
@@ -269,7 +269,7 @@ function files = RemoveNodes(remove, floor, img)
     files=imread(img);
     for i=1:size(remove,1)
         if remove(i,1) == floor
-            files(remove(i,3)-10:remove(i,3)+10,remove(i,2)-10:remove(i,2)+10,:) = 0;
+            files(remove(i,3)-20:remove(i,3)+20,remove(i,2)-20:remove(i,2)+20,:) = 0;
         end
     end
 end
