@@ -272,6 +272,9 @@ function displayClickFromPoint(x, y, color) {
 	var holder = element("point-holder");
 	var margin = 15;
 	var top = (y - margin);
+	if (window.innerWidth < 500) {
+		margin = -15;
+	}
 	var left = Math.round(x - holder.getBoundingClientRect().left - margin);
 	uniqueClickId++;
 	holder.innerHTML += "<div id='" + parseInt(uniqueClickId) +"' class='point' data-color='" + color + "' style='background: " + color + "; top: "+ top +"px; left: " + left + "px;'></div>";	

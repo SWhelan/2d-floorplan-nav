@@ -28,6 +28,34 @@ public class Directions {
 		public int getY() {
 			return y;
 		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + index;
+			result = prime * result + x;
+			result = prime * result + y;
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Coordinate other = (Coordinate) obj;
+			if (index != other.index)
+				return false;
+			if (x != other.x)
+				return false;
+			if (y != other.y)
+				return false;
+			return true;
+		}
 		
 	}
 	
@@ -187,5 +215,19 @@ public class Directions {
 	    else{
 	        return "mistakes were made";
 	    }
+	}
+	
+	public class Hook {
+		public List<Coordinate> generateCoords(List<String> steps) {
+			return Directions.generateCoords(steps);
+		}
+		
+		public List<String> generatePrettySteps(List<Coordinate> coords) {
+			return Directions.generatePrettySteps(coords);
+		}
+		
+		public String generatePrettyStep(Coordinate coord1, Coordinate coord2) {
+			return Directions.generatePrettyStep(coord1, coord2);
+		}
 	}
 }

@@ -28,7 +28,7 @@ public class UploadFileService {
 		rq.raw().setAttribute(MULTIPART_CONFIG_KEY, multipartConfigElement);
 		try {
 			Part uploadedFile = rq.raw().getPart(FILE_KEY);
-			byte[] bytes = getFileBytes(uploadedFile);
+			byte[] bytes = getFileBytes(uploadedFile.getInputStream());
 			String fileLocation = DEFAULT_MULTIPART_WRITE_LOCATION + uploadedFile.getSubmittedFileName();
 			Files.write(Paths.get(fileLocation), bytes);
 			return fileLocation;
@@ -38,8 +38,7 @@ public class UploadFileService {
 		}
 	}
 
-	private static byte[] getFileBytes(Part uploadedFile) throws IOException {
-		InputStream inputStream = uploadedFile.getInputStream();
+	private static byte[] getFileBytes(InputStream inputStream) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		boolean done = false;
 		while(!done) {
@@ -55,5 +54,15 @@ public class UploadFileService {
 	
 	private static boolean endOfInputStream(int value) {
 		return value == -1;
-	}	
+	}
+	
+	public class Hook {
+		public byte[] getFileBytes(InputStream inputStream) throws IOException {
+			return UploadFileService.getFileBytes(inputStream);
+		}
+		
+		public boolean endOfInputstream(int value) {
+			return UploadFileService.endOfInputStream(value);
+		}
+	}
 }
