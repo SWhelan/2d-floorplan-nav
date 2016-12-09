@@ -137,13 +137,29 @@ public class Directions {
 	    prettySteps.add("Assuming that north is up");
 	    prettySteps.add("Start");
 	    while(coords.size() > 1) {
-	        prettySteps.add(generatePrettyStep(coords.remove(0), coords.remove(0)));
+	        prettySteps.add(generatePrettyStep(coords.remove(0), coords.get(0)));
 	    }
 	    prettySteps.add("End");
 	    return prettySteps;
 	}
 
 	private static String generatePrettyStep(Coordinate coord1, Coordinate coord2) {
+		if(coord1.getIndex()>coord2.getIndex()){
+			if(coord1.getIndex()-coord2.getIndex()==1){
+				return "Go 1 floor down";
+			}
+			else{
+				return String.format("Go d% floors down", coord1.getIndex()-coord2.getIndex())
+			}
+		}
+		if(coord1.getIndex()<coord2.getIndex()){
+			if(coord2.getIndex()-coord1.getIndex()==1){
+				return "Go 1 floor up";
+			}
+			else{
+				return String.format("Go d% floors up", coord2.getIndex()-coord1.getIndex())
+			}
+		}
 	    if(coord1.getX()>coord2.getX() && coord1.getY()==coord2.getY()){
 	        return "Go west 1 unit";
 	    }
