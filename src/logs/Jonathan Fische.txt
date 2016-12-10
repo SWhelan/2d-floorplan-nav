@@ -109,4 +109,6 @@ I also did this week was atempted again the directions, but I wasnt going anywhe
 	thoroughly paint over the parts you want to remove. I tried making the area of removal bigger but it just seems to work better when you overpaint.
 Next week is last week, so its time to do last bits of tweeking and test to make sure we have the best we are able to by next Friday.
 
- 
+For the week of 12/9
+Not too much was done this week, just some double checking that everything works, as well as working on the final report and presentation.
+I also added directions for moving up and down floors, with it parameters for whether the person is moving up/down one floor or many floors.
